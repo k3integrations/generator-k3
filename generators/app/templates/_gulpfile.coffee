@@ -76,7 +76,7 @@ html = (dest, includeIndex=true)->
     .pipe $.size()
 
 
-gulp.task 'html', ['templates', 'styles', 'coffee', 'scripts'], -> html('dist')
+gulp.task 'html', ['templates', 'styles', 'coffee', 'scripts'], -> html(appConfig.dist)
 gulp.task 'rails-html', ['templates', 'styles', 'coffee', 'scripts'], ->
   html('../public', false)
 
@@ -90,7 +90,7 @@ images = (dest)->
     .pipe gulp.dest(dest)
     .pipe $.size()
 
-gulp.task 'images', -> images('dist/images')
+gulp.task 'images', -> images("#{appConfig.dist}/images")
 gulp.task 'rails-images', -> images('../public/images')
 
 fonts = (dest)->
@@ -100,18 +100,18 @@ fonts = (dest)->
     .pipe gulp.dest(dest)
     .pipe $.size()
 
-gulp.task 'fonts', -> fonts('dist/fonts')
+gulp.task 'fonts', -> fonts("#{appConfig.dist}/fonts")
 gulp.task 'rails-fonts', -> fonts('../public/fonts')
 
 extras = (dest)->
   gulp.src ["#{appConfig.app}/*.*", "!#{appConfig.app}/*.html"], { dot: true }
     .pipe gulp.dest(dest)
 
-gulp.task 'extras', -> extras('dist')
+gulp.task 'extras', -> extras(appConfig.dist)
 gulp.task 'rails-extras', -> extras('../public')
 
 gulp.task 'clean', ->
-  gulp.src ['.tmp', 'dist'], { read: false }
+  gulp.src ['.tmp', appConfig.dist], { read: false }
     .pipe $.clean()
 
 gulp.task 'rails-clean', ->
@@ -143,7 +143,7 @@ gulp.task 'connect', ->
 gulp.task 'build-connect', ->
   connect = require 'connect'
   app     = connect()
-    .use connect.static('dist')
+    .use connect.static(appConfig.dist)
   require 'http'
     .createServer app
     .listen 9000
