@@ -1,0 +1,45 @@
+.site-navigation.hide-for-small
+  top-bar(is-hover='false')
+    ul.title-area
+      li.name
+        h1
+          a(href='#') <%= appName %>
+    top-bar-section
+      //- Right Nav Section
+      ul.right
+        li(has-dropdown ng-if="wfUser")
+          a(href='')
+            img(alc-holder='holder.js/32x32/wf/text: /' style="border-radius:50%;margin-right:1em;")
+            | {{wfUser.name.first}} {{wfUser.name.last}}
+            span(ng-if="wfUser.admin") &nbsp;(Admin)
+          ul(top-bar-dropdown)
+            li
+              a(ui-sref='dashboard') My Dashboard
+            li
+              a(href='profile') My Profile
+            li
+              a(ui-sref='logout') Log Out
+
+        li(ng-if="!wfUser")
+          a(ui-sref='register') Sign Up
+
+        li(has-dropdown ng-if="!wfUser")
+          a(href='') Log In
+          ul(top-bar-dropdown)
+            li
+              form.login(wf-stop-click-propagation)
+                label Email
+                  input(type="text" ng-model="wfLogin")
+                label Password
+                  input(type="password" ng-model="wfPassword")
+                input.button.expand(type="submit" value="Log In" ui-sref='login({login:wfLogin, password:wfPassword})' wf-stop-click-propagation)
+
+        li(has-dropdown)
+          a(href='') Menu
+          ul(top-bar-dropdown)
+            li
+              a(href='') Menu Item 1
+            li
+              a(href='') Menu Item 2
+            li
+              a(href='') Menu Item 3

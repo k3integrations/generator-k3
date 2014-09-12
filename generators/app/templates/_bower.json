@@ -1,11 +1,23 @@
 {<% var ngVer = "1.3" %>
   "name": "<%= _.slugify(_.humanize(appname)) %>",
-  "version": "0.0.0",
+  <% if (appPath) { %>"appPath": "<%= appPath %>",<% } %>
+  "private": true,
+  "version": "0.1.0",
   "dependencies": {
+    "modernizr": "~2.8.0",
+    "jquery": "~2.1.0",
     "angular": "<%= ngVer %>",
     "json3": "~3.3.1",
     "es5-shim": "~3.1.0",
-    "jquery": "~1.11.1"<% if (resourceModule) { %>,
+    "angular-foundation": "~0.3.0",
+    "angular-ui-router": "~0.2.10",
+    "foundation": "~5.3.3",
+    "font-awesome": "~4.1.0",
+    "holderjs": "~2.3.2",
+    "moment": "~2.8.1",
+    "angular-ui-utils": "bower",
+    "animate.css": "~3.2.0",
+    "lodash": "~2.4.1"<% if (resourceModule) { %>,
     "angular-resource": "<%= ngVer %>"<% } %><% if (cookiesModule) { %>,
     "angular-cookies": "<%= ngVer %>"<% } %><% if (sanitizeModule) { %>,
     "angular-sanitize": "<%= ngVer %>"<% } %><% if (animateModule) { %>,
@@ -15,7 +27,30 @@
   },
   "devDependencies": {
     "angular-mocks": "<%= ngVer %>",
-    "angular-scenario": "<%= ngVer %>"
-  }<% if (appPath) { %>,
-  "appPath": "<%= appPath %>"<% } %>
+    "angular-scenario": "<%= ngVer %>",
+    "Faker": "~1.1.0"
+  },
+  "overrides": {
+    "Faker": {
+      "main": [
+        "faker.js"
+      ]
+    },
+    "foundation": {
+      "main": [
+        "scss/foundation.scss"
+      ]
+    },
+    "dropzone": {
+      "main": [
+        "downloads/dropzone.min.js"
+      ]
+    },
+    "angular-dropzone": {
+      "main": [
+        "lib/angular-dropzone.js"
+      ]
+    }
+  }
 }
+

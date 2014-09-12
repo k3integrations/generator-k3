@@ -8,7 +8,7 @@ class AppGenerator extends yeoman.generators.Base
   constructor: ->
     super
 
-    appNameFromPath = @_classify(path.basename(process.cwd()))
+    appNameFromPath = @_classify path.basename process.cwd()
 
     @argument 'appName',
       type: String
@@ -20,26 +20,26 @@ class AppGenerator extends yeoman.generators.Base
       type: String
       required: false
       desc: "The location of your webapp"
-      defaults: "public"
+      defaults: "app"
 
     @option 'testPath',
       type: String
       required: false
       desc: "The location of your tests"
-      defaults: "spec/javascripts/unit"
+      defaults: "test"
 
 
 
   prompting:
     modules: ->
-      @appName = @_classify(@appName)
+      @appName = @_classify @appName
 
       done = @async()
 
       @prompt [
           type    : "input"
           name    : "topLevelModuleName"
-          message : "What is the name of your top level module:"
+          message : "What is the name of your top level module (will also add a [name].Wire version):"
           default : @appName
       ,
           type    : "input"
@@ -50,7 +50,7 @@ class AppGenerator extends yeoman.generators.Base
           type    : "input"
           name    : "firstModuleName"
           message : "What is the name of your first module:"
-          default : "Main"
+          default : "Home"
       ,
           type    : "input"
           name    : "directiveNamespace"
@@ -95,13 +95,13 @@ class AppGenerator extends yeoman.generators.Base
         ]
       ]
       @prompt prompts, (answers)=>
-        hasMod = (mod) -> answers.modules.indexOf(mod) != -1
-        @animateModule = hasMod('animateModule')
-        @cookiesModule = hasMod('cookiesModule')
-        @resourceModule = hasMod('resourceModule')
-        @routeModule = hasMod('routeModule')
-        @sanitizeModule = hasMod('sanitizeModule')
-        @touchModule = hasMod('touchModule')
+        hasMod = (mod) -> ~answers.modules.indexOf(mod)
+        @animateModule  = hasMod 'animateModule'
+        @cookiesModule  = hasMod 'cookiesModule'
+        @resourceModule = hasMod 'resourceModule'
+        @routeModule    = hasMod 'routeModule'
+        @sanitizeModule = hasMod 'sanitizeModule'
+        @touchModule    = hasMod 'touchModule'
         done()
 
   saveConfig: ->
@@ -116,12 +116,17 @@ class AppGenerator extends yeoman.generators.Base
   writing:
     createTopLevelModule: ->
       @invoke "k3:module",
-        args: [@appName]
+        args: [@topLevelModuleName]
+        options: topLevel: true
+
+    createWireModule: ->
+      @invoke "k3:module",
+        args: ["#{@topLevelModuleName}.Wire"]
         options: topLevel: true
 
     createSharedModule: ->
       @invoke "k3:module",
-        args: ["shared"]
+        args: [@config.get 'sharedModuleName']
         options: shared: true
 
     createMainModule: ->
@@ -130,59 +135,70 @@ class AppGenerator extends yeoman.generators.Base
 
 
   packageFiles: ->
-    @template '_bower.json', 'bower.json'
-    @template '_bowerrc', '.bowerrc'
-    @template '_package.json', 'package.json'
-    @template '_Gruntfile.js', 'Gruntfile.js'
-    @template 'index.html', @appPath + '/index.html'
+    @template '_bower.json'         , 'bower.json'
+    @template '_bowerrc'            , '.bowerrc'
+    @template '_package.json'       , 'package.json'
+    @template '_gulpfile.js'        , 'gulpfile.js'
+    @template '_gulpfile.coffee'    , 'gulpfile.coffee'
+    @template '_gitignore'          , '.gitignore'
+    @template 'index.html'          , @appPath + '/index.html'
+    @template '_header.jade'        , @appPath + '/partials/header.jade'
+    @template '_header-mobile.jade' , @appPath + '/partials/header-mobile.jade'
+    @template '_footer.jade'        , @appPath + '/partials/footer.jade'
 
 
   _installKarma: ->
     enabledComponents = []
 
     if @animateModule
-      enabledComponents.push('angular-animate/angular-animate.js');
-
+      enabledComponents.push 'angular-animate/angular-animate.js'
     if @cookiesModule
-      enabledComponents.push('angular-cookies/angular-cookies.js');
-
+      enabledComponents.push 'angular-cookies/angular-cookies.js'
     if @resourceModule
-      enabledComponents.push('angular-resource/angular-resource.js');
-
+      enabledComponents.push 'angular-resource/angular-resource.js'
     if @routeModule
-      enabledComponents.push('angular-route/angular-route.js');
-
+      enabledComponents.push 'angular-route/angular-route.js'
     if @sanitizeModule
-      enabledComponents.push('angular-sanitize/angular-sanitize.js');
-
+      enabledComponents.push 'angular-sanitize/angular-sanitize.js'
     if @touchModule
-      enabledComponents.push('angular-touch/angular-touch.js');
+      enabledComponents.push 'angular-touch/angular-touch.js'
 
     enabledComponents = [
-      'jquery/dist/jquery.js',
-      'angular/angular.js',
+      'jquery/dist/jquery.js'
+      'angular/angular.js'
       'angular-mocks/angular-mocks.js'
-    ].concat(enabledComponents).join(',');
+    ].concat(enabledComponents).join ','
 
     @invoke 'karma:app',
       options:
         'base-path': '../../'
-        'config-path': 'spec/javascripts/'
+        'config-path': "#{@testPath}/"
         'browsers': 'Chrome'
         'coffee': true
-        'travis': true
+        # 'travis': true
         'skip-install': true
         'test-framework': 'mocha'
-        'app-files': 'public/scripts/**/*.coffee'
-        'bower-components-path': 'vendor/bower_components'
+        'app-files': "#{@appPath}/scripts/**/*.coffee"
+        'bower-components-path': "#{@appPath}/bower_components"
         'bower-components': enabledComponents
-        'test-files': 'spec/javascripts/**/*_spec.coffee'
+        'test-files': "#{@testPath}/**/*_spec.coffee"
 
 
+  install: ->
+    done = @async()
+    @installDependencies
+      callback: => @_injectDependencies done
+
+
+  end: -> @log 'As you where, gents!'
+
+
+  #Private
   _injectDependencies: (done)->
     @_installKarma()
     @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
       @log """
+
         After running `npm install & bower install`, inject your front end dependencies
         into your source code by running:
 
@@ -194,21 +210,12 @@ class AppGenerator extends yeoman.generators.Base
         Also, remember you can configure karma processors. For example you may want sourcemaps.
         For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
       """
+      done?()
 
 
-  install: ->
-    @installDependencies callback: =>
-      @_injectDependencies()
-
-
-
-  end: ->
-    @log "As you where Gents!"
-
-
-  #Private
   _classify: (name)->
     @_.classify @_.underscored name
+
 
 
 module.exports = AppGenerator

@@ -41,10 +41,13 @@ class RouteGenerator extends K3NamedGenerator
     routePath      = path.join(@appPath, 'scripts', moduleUri + '.coffee')
     templName      = @_.underscored @name
     controllerName = @_.classify @_.underscored @name
+
+    # FIXME: need to update this for ui-router instead!
     insert    = "      .when '#{@options.uri}'," + '\n' +
                 "        templateUrl: '#{moduleUri}/views/#{templName}'" + '\n' +
                 "        controller: '#{controllerName}Ctrl'"
     hook      = '      .otherwise'
+
     @insertLine routePath, insert, hook
 
 
