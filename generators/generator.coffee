@@ -6,8 +6,7 @@ class K3Generator extends yeoman.generators.Base
     super
     @_.extend @, @config.getAll()
     @on 'end', =>
-      console.log "Include sources"
-      @spawnCommand('grunt', ['fileblocks'])
+      console.log "Run `gulp watch` to get everything up and running!"
 
   insertLine: (path, insert, hook="  #=== yeoman hook ===#")->
     file = @readFileAsString path

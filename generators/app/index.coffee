@@ -115,17 +115,17 @@ class AppGenerator extends yeoman.generators.Base
 
   writing:
     createTopLevelModule: ->
-      @invoke "angular-k3:module",
+      @invoke "k3:module",
         args: [@appName]
         options: topLevel: true
 
     createSharedModule: ->
-      @invoke "angular-k3:module",
+      @invoke "k3:module",
         args: ["shared"]
         options: shared: true
 
     createMainModule: ->
-      @invoke "angular-k3:module",
+      @invoke "k3:module",
         args: [@answers.firstModuleName]
 
 
@@ -181,13 +181,19 @@ class AppGenerator extends yeoman.generators.Base
 
   _injectDependencies: (done)->
     @_installKarma()
-    @spawnCommand('grunt', ['wireall']).on 'exit', =>
-      @log 'After running `npm install & bower install`, inject your front end dependencies' +
-        '\ninto your source code by running:' +
-        '\n' +
-        '\n' + chalk.yellow.bold('grunt wireall') +
-        '\n Also, remember you can configure karma processors. For example you may want sourcemaps.' +
-        '\n For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor'
+    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
+      @log """
+        After running `npm install & bower install`, inject your front end dependencies
+        into your source code by running:
+
+        #{chalk.yellow.bold 'gulp wiredep'}
+        #{chalk.yellow.bold 'gulp wireup'}
+
+        In the future this will be taken care of by `gulp watch` while your app is running.
+
+        Also, remember you can configure karma processors. For example you may want sourcemaps.
+        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
+      """
 
 
   install: ->

@@ -26,9 +26,9 @@ class RouteGenerator extends K3NamedGenerator
     @_parseName()
 
     invokeArgs = "#{@moduleName}.#{@name}"
-    @invoke "angular-k3:controller",
+    @invoke "k3:controller",
       args: [invokeArgs]
-    @invoke "angular-k3:view",
+    @invoke "k3:view",
       args: [invokeArgs]
 
 
