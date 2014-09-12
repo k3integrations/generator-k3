@@ -1,4 +1,4 @@
-K3 Generator
+K3 Generators for Yeoman
 ====================
 
 # Todo:
