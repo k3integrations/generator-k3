@@ -20,6 +20,6 @@
     "coffee-script": "^1.8.0",
     "generator-karma": "^0.8.2",
     "gulp": "^3.8.8",
-    "yeoman-generator": "^0.17.5"
+    "yeoman-generator": "^0.17.6"
   }
 }
