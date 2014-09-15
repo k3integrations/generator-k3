@@ -25,11 +25,11 @@ class RouteGenerator extends K3NamedGenerator
     #FIXME: Workaround: for some reason, name is getting reset to the orignal args
     @_parseName()
 
-    invokeArgs = "#{@moduleName}.#{@name}"
-    @invoke "k3:controller",
-      args: [invokeArgs]
-    @invoke "k3:view",
-      args: [invokeArgs]
+    arguments = ["#{@moduleName}.#{@name}"]
+    @composeWith "k3:controller",
+      arguments: arguments
+    @composeWith "k3:view",
+      arguments: arguments
 
 
 
