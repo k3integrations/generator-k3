@@ -60,7 +60,6 @@ class AppGenerator extends yeoman.generators.Base
         done()
 
     askForModules: ->
-
       done = @async()
 
       prompts = [
@@ -147,11 +146,59 @@ class AppGenerator extends yeoman.generators.Base
 
 
   install: ->
-    done = @async()
-    @installDependencies
-      callback: ->
-        done()
-        @_injectDependencies done
+    dependencies: -> @installDependencies()
+
+    karma: ->
+      enabledComponents = []
+
+      if @animateModule
+        enabledComponents.push 'angular-animate/angular-animate.js'
+      if @cookiesModule
+        enabledComponents.push 'angular-cookies/angular-cookies.js'
+      if @resourceModule
+        enabledComponents.push 'angular-resource/angular-resource.js'
+      if @routeModule
+        enabledComponents.push 'angular-route/angular-route.js'
+      if @sanitizeModule
+        enabledComponents.push 'angular-sanitize/angular-sanitize.js'
+      if @touchModule
+        enabledComponents.push 'angular-touch/angular-touch.js'
+
+      enabledComponents = [
+        'jquery/dist/jquery.js'
+        'angular/angular.js'
+        'angular-mocks/angular-mocks.js'
+      ].concat(enabledComponents).join ','
+
+      @composeWith 'karma:app',
+        options:
+          'base-path': '../../'
+          'config-path': "#{@testPath}/"
+          'browsers': 'Chrome'
+          'coffee': true
+          # 'travis': true
+          'skip-install': true
+          'test-framework': 'mocha'
+          'app-files': "#{@appPath}/scripts/**/*.coffee"
+          'bower-components-path': "#{@appPath}/bower_components"
+          'bower-components': enabledComponents
+          'test-files': "#{@testPath}/**/*_spec.coffee"
+
+    injectDependencies: ->
+      @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
+        @log """
+
+          After running `npm install & bower install`, inject your front end dependencies
+          into your source code by running:
+
+          #{chalk.yellow.bold 'gulp wiredep'}
+          #{chalk.yellow.bold 'gulp wireup'}
+
+          In the future this will be taken care of by `gulp watch` while your app is running.
+
+          Also, remember you can configure karma processors. For example you may want sourcemaps.
+          For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
+        """
 
 
   end: ->
@@ -163,62 +210,6 @@ class AppGenerator extends yeoman.generators.Base
 
 
   #Private
-  _installKarma: ->
-    enabledComponents = []
-
-    if @animateModule
-      enabledComponents.push 'angular-animate/angular-animate.js'
-    if @cookiesModule
-      enabledComponents.push 'angular-cookies/angular-cookies.js'
-    if @resourceModule
-      enabledComponents.push 'angular-resource/angular-resource.js'
-    if @routeModule
-      enabledComponents.push 'angular-route/angular-route.js'
-    if @sanitizeModule
-      enabledComponents.push 'angular-sanitize/angular-sanitize.js'
-    if @touchModule
-      enabledComponents.push 'angular-touch/angular-touch.js'
-
-    enabledComponents = [
-      'jquery/dist/jquery.js'
-      'angular/angular.js'
-      'angular-mocks/angular-mocks.js'
-    ].concat(enabledComponents).join ','
-
-    @composeWith 'karma:app',
-      options:
-        'base-path': '../../'
-        'config-path': "#{@testPath}/"
-        'browsers': 'Chrome'
-        'coffee': true
-        # 'travis': true
-        'skip-install': true
-        'test-framework': 'mocha'
-        'app-files': "#{@appPath}/scripts/**/*.coffee"
-        'bower-components-path': "#{@appPath}/bower_components"
-        'bower-components': enabledComponents
-        'test-files': "#{@testPath}/**/*_spec.coffee"
-
-
-  _injectDependencies: (done)->
-    @_installKarma()
-    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
-      @log """
-
-        After running `npm install & bower install`, inject your front end dependencies
-        into your source code by running:
-
-        #{chalk.yellow.bold 'gulp wiredep'}
-        #{chalk.yellow.bold 'gulp wireup'}
-
-        In the future this will be taken care of by `gulp watch` while your app is running.
-
-        Also, remember you can configure karma processors. For example you may want sourcemaps.
-        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
-      """
-      done?()
-
-
   _classify: (name)->
     @_.classify @_.underscored name
 
