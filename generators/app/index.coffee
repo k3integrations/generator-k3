@@ -39,7 +39,7 @@ class AppGenerator extends yeoman.generators.Base
       @prompt [
           type    : "input"
           name    : "topLevelModuleName"
-          message : "What is the name of your top level module (will also add a [name].Wire version):"
+          message : "What is the name of your top level module (will also add a [name].Wire version for wireframing):"
           default : @appName
       ,
           type    : "input"
@@ -147,6 +147,35 @@ class AppGenerator extends yeoman.generators.Base
     @template '_footer.jade'        , @appPath + '/partials/footer.jade'
 
 
+  install: ->
+    done = @async()
+    @installDependencies
+      callback: => @_injectDependencies done
+
+
+  end: -> @log 'As you where, gents!'
+
+
+  #Private
+  _injectDependencies: (done)->
+    @_installKarma()
+    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
+      @log """
+
+        After running `npm install & bower install`, inject your front end dependencies
+        into your source code by running:
+
+        #{chalk.yellow.bold 'gulp wiredep'}
+        #{chalk.yellow.bold 'gulp wireup'}
+
+        In the future this will be taken care of by `gulp watch` while your app is running.
+
+        Also, remember you can configure karma processors. For example you may want sourcemaps.
+        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
+      """
+      done?()
+
+
   _installKarma: ->
     enabledComponents = []
 
@@ -182,35 +211,6 @@ class AppGenerator extends yeoman.generators.Base
         'bower-components-path': "#{@appPath}/bower_components"
         'bower-components': enabledComponents
         'test-files': "#{@testPath}/**/*_spec.coffee"
-
-
-  install: ->
-    done = @async()
-    @installDependencies
-      callback: => @_injectDependencies done
-
-
-  end: -> @log 'As you where, gents!'
-
-
-  #Private
-  _injectDependencies: (done)->
-    @_installKarma()
-    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
-      @log """
-
-        After running `npm install & bower install`, inject your front end dependencies
-        into your source code by running:
-
-        #{chalk.yellow.bold 'gulp wiredep'}
-        #{chalk.yellow.bold 'gulp wireup'}
-
-        In the future this will be taken care of by `gulp watch` while your app is running.
-
-        Also, remember you can configure karma processors. For example you may want sourcemaps.
-        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
-      """
-      done?()
 
 
   _classify: (name)->
