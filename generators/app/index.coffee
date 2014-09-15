@@ -145,9 +145,10 @@ class AppGenerator extends yeoman.generators.Base
       @template '_footer.jade'        , @appPath + '/partials/footer.jade'
 
 
-  install: ->
-    dependencies: -> @installDependencies()
+  install: -> @installDependencies()
 
+
+  end:
     karma: ->
       enabledComponents = []
 
@@ -185,6 +186,7 @@ class AppGenerator extends yeoman.generators.Base
           'test-files': "#{@testPath}/**/*_spec.coffee"
 
     injectDependencies: ->
+      done = @async()
       @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
         @log """
 
@@ -199,14 +201,14 @@ class AppGenerator extends yeoman.generators.Base
           Also, remember you can configure karma processors. For example you may want sourcemaps.
           For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
         """
+        done()
 
+    goodbye: ->
+      @log """
 
-  end: ->
-    @log """
-
-      As you where, gents!
-      Run `gulp watch` to get everything up and running!
-    """
+        As you where, gents!
+        Run `gulp watch` to get everything up and running!
+      """
 
 
   #Private
