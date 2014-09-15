@@ -60,6 +60,7 @@ class AppGenerator extends yeoman.generators.Base
         done()
 
     askForModules: ->
+
       done = @async()
 
       prompts = [
@@ -148,30 +149,17 @@ class AppGenerator extends yeoman.generators.Base
   install: ->
     done = @async()
     @installDependencies
-      callback: => @_injectDependencies done
+      callback: ->
+        done()
+        @_injectDependencies done
 
 
-  end: -> @log 'As you where, gents!'
+  end: ->
+    @log """
 
-
-  #Private
-  _injectDependencies: (done)->
-    @_installKarma()
-    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
-      @log """
-
-        After running `npm install & bower install`, inject your front end dependencies
-        into your source code by running:
-
-        #{chalk.yellow.bold 'gulp wiredep'}
-        #{chalk.yellow.bold 'gulp wireup'}
-
-        In the future this will be taken care of by `gulp watch` while your app is running.
-
-        Also, remember you can configure karma processors. For example you may want sourcemaps.
-        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
-      """
-      done?()
+      As you where, gents!
+      Run `gulp watch` to get everything up and running!
+    """
 
 
   #Private
@@ -210,6 +198,25 @@ class AppGenerator extends yeoman.generators.Base
         'bower-components-path': "#{@appPath}/bower_components"
         'bower-components': enabledComponents
         'test-files': "#{@testPath}/**/*_spec.coffee"
+
+
+  _injectDependencies: (done)->
+    @_installKarma()
+    @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
+      @log """
+
+        After running `npm install & bower install`, inject your front end dependencies
+        into your source code by running:
+
+        #{chalk.yellow.bold 'gulp wiredep'}
+        #{chalk.yellow.bold 'gulp wireup'}
+
+        In the future this will be taken care of by `gulp watch` while your app is running.
+
+        Also, remember you can configure karma processors. For example you may want sourcemaps.
+        For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
+      """
+      done?()
 
 
   _classify: (name)->

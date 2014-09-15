@@ -5,8 +5,6 @@ class K3Generator extends yeoman.generators.Base
   constructor: ->
     super
     @_.extend @, @config.getAll()
-    @on 'end', =>
-      console.log "Run `gulp watch` to get everything up and running!"
 
   insertLine: (path, insert, hook="  #=== yeoman hook ===#")->
     file = @readFileAsString path
