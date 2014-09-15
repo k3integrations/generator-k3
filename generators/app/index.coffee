@@ -32,8 +32,6 @@ class AppGenerator extends yeoman.generators.Base
 
   prompting:
     modules: ->
-      @appName = @_classify @appName
-
       done = @async()
 
       @prompt [
@@ -107,7 +105,8 @@ class AppGenerator extends yeoman.generators.Base
   saveConfig: ->
     @config.set 'appName',  @appName
     @config.set 'sharedModuleName',  @_classify @answers.sharedModuleName
-    @topLevelModuleName = @config.set 'topLevelModuleName',  @_classify @answers.topLevelModuleName
+    @topLevelModuleName = @config.set 'topLevelModuleName', @answers.topLevelModuleName
+    @wireModuleName     = @config.set 'wireModuleName', "#{@topLevelModuleName}.Wire"
     @appPath            = @config.set 'appPath',  @options.appPath
     @testPath           = @config.set 'testPath',  @options.testPath
     @directiveNamespace = @config.set 'directiveNamespace',  @answers.directiveNamespace
@@ -115,36 +114,35 @@ class AppGenerator extends yeoman.generators.Base
 
   writing:
     createTopLevelModule: ->
-      @invoke "k3:module",
-        args: [@topLevelModuleName]
+      @composeWith "k3:module",
+        arguments: [@topLevelModuleName]
         options: topLevel: true
 
     createWireModule: ->
-      @invoke "k3:module",
-        args: ["#{@topLevelModuleName}.Wire"]
+      @composeWith "k3:module",
+        arguments: [@wireModuleName]
         options: topLevel: true
 
     createSharedModule: ->
-      @invoke "k3:module",
-        args: [@config.get 'sharedModuleName']
+      @composeWith "k3:module",
+        arguments: [@config.get 'sharedModuleName']
         options: shared: true
 
     createMainModule: ->
-      @invoke "k3:module",
-        args: [@answers.firstModuleName]
+      @composeWith "k3:module",
+        arguments: [@answers.firstModuleName]
 
-
-  packageFiles: ->
-    @template '_bower.json'         , 'bower.json'
-    @template '_bowerrc'            , '.bowerrc'
-    @template '_package.json'       , 'package.json'
-    @template '_gulpfile.js'        , 'gulpfile.js'
-    @template '_gulpfile.coffee'    , 'gulpfile.coffee'
-    @template '_gitignore'          , '.gitignore'
-    @template 'index.html'          , @appPath + '/index.html'
-    @template '_header.jade'        , @appPath + '/partials/header.jade'
-    @template '_header-mobile.jade' , @appPath + '/partials/header-mobile.jade'
-    @template '_footer.jade'        , @appPath + '/partials/footer.jade'
+    packageFiles: ->
+      @template '_bower.json'         , 'bower.json'
+      @template '_bowerrc'            , '.bowerrc'
+      @template '_package.json'       , 'package.json'
+      @template '_gulpfile.js'        , 'gulpfile.js'
+      @template '_gulpfile.coffee'    , 'gulpfile.coffee'
+      @template '_gitignore'          , '.gitignore'
+      @template 'index.html'          , @appPath + '/index.html'
+      @template '_header.jade'        , @appPath + '/partials/header.jade'
+      @template '_header-mobile.jade' , @appPath + '/partials/header-mobile.jade'
+      @template '_footer.jade'        , @appPath + '/partials/footer.jade'
 
 
   install: ->
@@ -176,6 +174,7 @@ class AppGenerator extends yeoman.generators.Base
       done?()
 
 
+  #Private
   _installKarma: ->
     enabledComponents = []
 
@@ -198,7 +197,7 @@ class AppGenerator extends yeoman.generators.Base
       'angular-mocks/angular-mocks.js'
     ].concat(enabledComponents).join ','
 
-    @invoke 'karma:app',
+    @composeWith 'karma:app',
       options:
         'base-path': '../../'
         'config-path': "#{@testPath}/"

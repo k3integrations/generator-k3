@@ -25,30 +25,30 @@ class ModuleGenerator extends K3Generator
 
 
   writing: ->
-    # @moduleName         = @_.classify @_.underscored @moduleName
-    @scriptsPath        = "#{@config.get 'appPath'}/scripts"
-    @modulePath         = "#{@scriptsPath}/#{@_.underscored @moduleName}"
-    @appName            = @config.get 'appName'
-    @topLevelModuleName = @config.get 'topLevelModuleName'
-    @sharedModuleName   = @config.get 'sharedModuleName'
+    @scriptsPath  = "#{@appPath}/scripts"
+    @fileName     = @_fileName @moduleName
+    @modulePath   = "#{@scriptsPath}/#{@fileName}"
     @mkdir @scriptsPath
-    @mkdir @modulePath unless @options.topLevel
+    @mkdir @modulePath
 
     templateName = switch
       when @options.shared    then 'shared.coffee'
       when @options.topLevel  then 'top_module.coffee'
       else                         'module.coffee'
 
-    @template templateName, "#{@scriptsPath}/#{@_.underscored @moduleName}.coffee"
+    @template templateName, "#{@scriptsPath}/#{@fileName}.coffee"
 
   end: ->
     unless @options.topLevel
       newModuleLine = "  '#{@topLevelModuleName}.#{@moduleName}',"
       @insertLine "#{@scriptsPath}/#{@_.underscored @topLevelModuleName}.coffee",
         newModuleLine
-      @insertLine "#{@scriptsPath}/#{@_.underscored @topLevelModuleName}_wire.coffee",
+      @insertLine "#{@scriptsPath}/#{@_fileName @wireModuleName}.coffee",
         newModuleLine
 
+
+  _fileName: (name) ->
+    @_.underscored(name).replace('.', '-')
 
 
 module.exports =  ModuleGenerator
