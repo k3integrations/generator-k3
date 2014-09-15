@@ -25,9 +25,9 @@ class ModuleGenerator extends K3Generator
 
 
   writing: ->
-    @moduleName         = @_.classify @_.underscored @moduleName
-    @scriptsPath        = "#{@config.get 'appPath'}/scripts/"
-    @modulePath         = @scriptsPath + @_.underscored @moduleName
+    # @moduleName         = @_.classify @_.underscored @moduleName
+    @scriptsPath        = "#{@config.get 'appPath'}/scripts"
+    @modulePath         = "#{@scriptsPath}/#{@_.underscored @moduleName}"
     @appName            = @config.get 'appName'
     @topLevelModuleName = @config.get 'topLevelModuleName'
     @sharedModuleName   = @config.get 'sharedModuleName'
@@ -39,12 +39,14 @@ class ModuleGenerator extends K3Generator
       when @options.topLevel  then 'top_module.coffee'
       else                         'module.coffee'
 
-    @template templateName, @scriptsPath + "/#{@_.underscored @moduleName}.coffee"
+    @template templateName, "#{@scriptsPath}/#{@_.underscored @moduleName}.coffee"
 
   end: ->
     unless @options.topLevel
       newModuleLine = "  '#{@topLevelModuleName}.#{@moduleName}',"
-      @insertLine @scriptsPath + @_.underscored(@topLevelModuleName) + ".coffee",
+      @insertLine "#{@scriptsPath}/#{@_.underscored @topLevelModuleName}.coffee",
+        newModuleLine
+      @insertLine "#{@scriptsPath}/#{@_.underscored @topLevelModuleName}_wire.coffee",
         newModuleLine
 
 
