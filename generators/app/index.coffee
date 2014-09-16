@@ -98,34 +98,36 @@ class AppGenerator extends yeoman.generators.Base
           touchModule    : hasMod 'touchModule'
         done()
 
-  saveConfig: ->
-    configs =
-      appName             : @appName
-      sharedModuleName    : @answers.sharedModuleName
-      topLevelModuleName  : @answers.topLevelModuleName
-      wireModuleName      : "#{@answers.topLevelModuleName}.Wire"
-      appPath             : @options.appPath
-      testPath            : @options.testPath
-      directiveNamespace  : @answers.directiveNamespace
-    @config.set configs
-
-    # avoid the debounce tick for auto-saving from @config.set
-    @config.forceSave()
-
-    # load our config settings as local properties
-    @_.extend @, configs
-
-
   writing:
+    saveConfig: ->
+      configs =
+        appName             : @appName
+        sharedModuleName    : @answers.sharedModuleName
+        topLevelModuleName  : @answers.topLevelModuleName
+        wireModuleName      : "#{@answers.topLevelModuleName}.Wire"
+        appPath             : @options.appPath
+        testPath            : @options.testPath
+        directiveNamespace  : @answers.directiveNamespace
+      @config.set configs
+
+      # avoid the debounce tick for auto-saving from @config.set
+      @config.forceSave()
+
+      # load our config settings as local properties
+      @_.extend @, configs
+
+
     createTopLevelModule: ->
       @composeWith "k3:module",
         arguments: [@topLevelModuleName]
         options: topLevel: true
 
+
     createWireModule: ->
       @composeWith "k3:module",
         arguments: [@wireModuleName]
         options: topLevel: true, isWireframe: true
+
 
     createSharedModule: ->
       sharedOptions = @_.extend {}, @angularModules,
@@ -135,9 +137,11 @@ class AppGenerator extends yeoman.generators.Base
         arguments: [@config.get 'sharedModuleName']
         options: sharedOptions
 
+
     createMainModule: ->
       @composeWith "k3:module",
         arguments: [@answers.firstModuleName]
+
 
     packageFiles: ->
       @template '_bower.json'         , 'bower.json'
@@ -178,7 +182,7 @@ class AppGenerator extends yeoman.generators.Base
       ].concat(enabledComponents).join ','
 
       @log '\n\n'
-      @composeWith 'karma:app',
+      @composeWith('karma:app', {
         options:
           'base-path': '../../'
           'config-path': "#{@testPath}/"
@@ -191,8 +195,12 @@ class AppGenerator extends yeoman.generators.Base
           'bower-components-path': "#{@appPath}/bower_components"
           'bower-components': enabledComponents
           'test-files': "#{@testPath}/**/*_spec.coffee"
+      } , {
+        local: require.resolve('generator-karma')
+      })
 
     injectDependencies: ->
+      @log "HEY"
       done = @async()
       @log '\n\n'
       @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
