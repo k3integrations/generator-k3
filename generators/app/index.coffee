@@ -221,12 +221,10 @@ class AppGenerator extends yeoman.generators.Base
         done()
 
     goodbye: ->
-      # TODO: chalk it up!
       @log """
 
-
-        As you where, gents!
-        Run `gulp watch` to get everything up and running!
+          #{chalk.blue 'As you where, gents!'}
+          #{chalk.yellow 'Run `gulp watch` to get everything up and running!'}
       """
 
 
