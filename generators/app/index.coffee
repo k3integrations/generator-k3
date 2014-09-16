@@ -200,7 +200,6 @@ class AppGenerator extends yeoman.generators.Base
       })
 
     injectDependencies: ->
-      @log "HEY"
       done = @async()
       @log '\n\n'
       @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
