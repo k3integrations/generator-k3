@@ -8,6 +8,7 @@ class K3NamedGenerator extends K3Generator
       required: true
       desc    : "#{@_.capitalize @componentName} name"
 
+    @name ?= ""
     @_parseName()
     @cameledName    = @_.camelize(@name)
     @classedName    = @_.classify(@name)
