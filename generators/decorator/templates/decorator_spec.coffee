@@ -11,4 +11,4 @@ describe 'Decorator: <%= cameledName %>', ->
     <%= cameledName %> = _<%= cameledName %>_
 
   it 'should do something', ->
-    expect(!!<%= cameledName %>).toBe true
+    expect(!!<%= cameledName %>).to.be.true

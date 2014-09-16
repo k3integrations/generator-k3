@@ -12,4 +12,4 @@ describe 'Filter: <%= cameledName %>', ->
 
   it 'should return the input prefixed with "<%= cameledName %> filter:"', ->
     text = 'angularjs'
-    expect(<%= cameledName %> text).toBe ('<%= cameledName %> filter: ' + text)
+    expect(<%= cameledName %> text).to.eq '<%= cameledName %> filter: ' + text
