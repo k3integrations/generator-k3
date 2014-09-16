@@ -202,7 +202,15 @@ class AppGenerator extends yeoman.generators.Base
     injectDependencies: ->
       done = @async()
       @log '\n\n'
-      @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
+      @spawnCommand('gulp', ['wiredep', 'wireup'])
+      .on 'error', =>
+        @log chalk.red.bold """
+          Please ensure you have gulp installed then run:
+
+          gulp wiredep
+          gulp wireup
+        """
+      .on 'exit', =>
         @log """
 
 
