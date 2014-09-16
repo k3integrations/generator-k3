@@ -6,7 +6,7 @@ class K3NamedGenerator extends K3Generator
 
     @argument 'name',
       required: true
-      desc    : "#{@_.capitalize @componentName} name"
+      desc    : @nameArgDesc || "#{@_.capitalize @componentName} name"
 
     @name ?= ""
     @_parseName()
