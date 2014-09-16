@@ -14,9 +14,7 @@ class DecoratorGenerator extends K3NamedGenerator
 
 
   writing: ->
-    @noSpec = true
     super
-    @log @chalk.underline.yellow "No spec template currently available for decorator"
 
 
 module.exports =  DecoratorGenerator
