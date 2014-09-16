@@ -4,6 +4,7 @@ K3NamedGenerator = require "../named_generator"
 
 class DirectiveGenerator extends K3NamedGenerator
   constructor: ->
+    @nameArgDesc = "Directive name, will be prefixed with application namespace"
     @componentName = "directive"
     super
 

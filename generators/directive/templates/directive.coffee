@@ -7,9 +7,12 @@
  # # <%= namespacedCameledName %>
 ###
 angular.module('<%= scriptAppName %>')
-  .directive('<%= namespacedCameledName %>', ->
-    template: '<div></div>'
-    restrict: 'E'
+  .directive '<%= namespacedCameledName %>', ->
+    template: """
+      <div>{{myText}}, this is the <%= namespacedCameledName %> directive </div>
+    """
+    restrict: 'A'
     link: (scope, element, attrs) ->
-      element.text 'this is the <%= namespacedCameledName %> directive'
-  )
+      element.on 'click', ->
+        console.log 'clicked'
+        scope.$apply()
