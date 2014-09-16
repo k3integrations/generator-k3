@@ -116,45 +116,53 @@ class AppGenerator extends yeoman.generators.Base
       # load our config settings as local properties
       @_.extend @, configs
 
-
     createTopLevelModule: ->
       @composeWith "k3:module",
         arguments: [@topLevelModuleName]
         options: topLevel: true
-
 
     createWireModule: ->
       @composeWith "k3:module",
         arguments: [@wireModuleName]
         options: topLevel: true, isWireframe: true
 
-
     createSharedModule: ->
       sharedOptions = @_.extend {}, @angularModules,
         shared: true
 
       @composeWith "k3:module",
-        arguments: [@config.get 'sharedModuleName']
+        arguments: [@sharedModuleName]
         options: sharedOptions
-
 
     createMainModule: ->
       @composeWith "k3:module",
         arguments: [@answers.firstModuleName]
 
+    bower: ->
+      @template '_bower.json' , 'bower.json'
+      @template '_bowerrc'    , '.bowerrc'
 
-    packageFiles: ->
-      @template '_bower.json'         , 'bower.json'
-      @template '_bowerrc'            , '.bowerrc'
-      @template '_package.json'       , 'package.json'
-      @template '_gulpfile.js'        , 'gulpfile.js'
-      @template '_gulpfile.coffee'    , 'gulpfile.coffee'
-      @template '_gitignore'          , '.gitignore'
-      @template 'index.html'          , @appPath + '/index.html'
-      @template '_home.jade'          , @appPath + '/partials/home.jade'
-      @template '_header.jade'        , @appPath + '/partials/header.jade'
-      @template '_header-mobile.jade' , @appPath + '/partials/header-mobile.jade'
-      @template '_footer.jade'        , @appPath + '/partials/footer.jade'
+    nodeModules: ->
+      @template '_package.json' , 'package.json'
+
+    gulp: ->
+      @template '_gulpfile.js'    , 'gulpfile.js'
+      @template '_gulpfile.coffee', 'gulpfile.coffee'
+
+    git: ->
+      @template '_gitignore', '.gitignore'
+
+    scripts: ->
+      scriptsPath = "#{@appPath}/scripts"
+      @template '_holderJSDirective.coffee' , "#{scriptsPath}/#{@_.underscored @sharedModuleName}/directives/holder.coffee"
+
+    html: ->
+      partialsPath = "#{@appPath}/partials"
+      @template 'index.html'          , "#{@appPath}/index.html"
+      @template '_home.jade'          , "#{partialsPath}/home.jade"
+      @template '_header.jade'        , "#{partialsPath}/header.jade"
+      @template '_header-mobile.jade' , "#{partialsPath}/header-mobile.jade"
+      @template '_footer.jade'        , "#{partialsPath}/footer.jade"
 
 
   install: -> @installDependencies()
