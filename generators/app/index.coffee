@@ -156,6 +156,9 @@ class AppGenerator extends yeoman.generators.Base
       scriptsPath = "#{@appPath}/scripts"
       @template '_holderJSDirective.coffee' , "#{scriptsPath}/#{@_.underscored @sharedModuleName}/directives/holder.coffee"
 
+    karma: ->
+      @template '_karma.conf.coffee'  , 'karma.conf.coffee'
+
     html: ->
       partialsPath = "#{@appPath}/partials"
       @template 'index.html'          , "#{@appPath}/index.html"
@@ -190,22 +193,6 @@ class AppGenerator extends yeoman.generators.Base
       ].concat(enabledComponents).join ','
 
       @log '\n\n'
-      @composeWith('karma:app', {
-        options:
-          'base-path': '../../'
-          'config-path': "#{@testPath}/"
-          'browsers': 'Chrome'
-          'coffee': true
-          # 'travis': true
-          'skip-install': true
-          'test-framework': 'mocha'
-          'app-files': "#{@appPath}/scripts/**/*.coffee"
-          'bower-components-path': "#{@appPath}/bower_components"
-          'bower-components': enabledComponents
-          'test-files': "#{@testPath}/**/*_spec.coffee"
-      } , {
-        local: require.resolve('generator-karma')
-      })
 
     injectDependencies: ->
       done = @async()
