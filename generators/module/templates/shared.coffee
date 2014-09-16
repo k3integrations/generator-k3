@@ -1,14 +1,17 @@
-angular.module('<%= topLevelModuleName %>.<%= moduleName %>', ['ngRoute', '<%= topLevelModuleName %>.Templates'])
+sharedModules = [
+  'mm.foundation'
+  'ui.utils'<% if (animateModule) { %>
+  'ngAnimate'<% } %><% if (cookiesModule) { %>
+  'ngCookies'<% } %><% if (resourceModule) { %>
+  'ngResource'<% } %><% if (sanitizeModule) { %>
+  'ngSanitize'<% } %><% if (touchModule) { %>
+  'ngTouch'<% } %>
+]
 
-  .config ($locationProvider, $httpProvider) ->
+angular.module('<%= topLevelModuleName %>.<%= moduleName %>', sharedModules)
 
-    # Setup configuration for AngularJS routes and partials.
-    $locationProvider.html5Mode true
-    $locationProvider.hashPrefix '!'
+  .config ($httpProvider) ->
 
-    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content');
+    $httpProvider.defaults.headers.common['X-CSRF-Token'] = $('meta[name=csrf-token]').attr('content')
 
-
-  .run ($templateCache)->
-    # Define global 404 page fallback
-    $templateCache.put '404_error', '<h1>404: Missing that page.</h1>'
+    # TODO: Will made something for something. Ask Nick. Or Will. Or Hugh.

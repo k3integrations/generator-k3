@@ -22,8 +22,7 @@
     "angular-cookies": "<%= ngVer %>"<% } %><% if (sanitizeModule) { %>,
     "angular-sanitize": "<%= ngVer %>"<% } %><% if (animateModule) { %>,
     "angular-animate": "<%= ngVer %>"<% } %><% if (touchModule) { %>,
-    "angular-touch": "<%= ngVer %>"<% } %><% if (routeModule) { %>,
-    "angular-route": "<%= ngVer %>"<% } %>
+    "angular-touch": "<%= ngVer %>"<% } %>
   },
   "devDependencies": {
     "angular-mocks": "<%= ngVer %>",

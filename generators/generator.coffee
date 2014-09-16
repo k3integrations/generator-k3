@@ -6,6 +6,7 @@ class K3Generator extends yeoman.generators.Base
     super
     @_.extend @, @config.getAll()
 
+
   insertLine: (path, insert, hook="  #=== yeoman hook ===#")->
     file = @readFileAsString path
 
@@ -14,6 +15,9 @@ class K3Generator extends yeoman.generators.Base
     if file.indexOf(firstLine) == -1
       @writeFileFromString file.replace(hook, insert + '\n' + hook), path
 
+
   chalk: chalk
+
+
 
 module.exports = K3Generator

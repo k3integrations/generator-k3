@@ -79,10 +79,6 @@ class AppGenerator extends yeoman.generators.Base
           name: 'angular-resource.js'
           checked: true
         ,
-          value: 'routeModule'
-          name: 'angular-route.js'
-          checked: true
-        ,
           value: 'sanitizeModule'
           name: 'angular-sanitize.js'
           checked: true
@@ -97,19 +93,26 @@ class AppGenerator extends yeoman.generators.Base
         @animateModule  = hasMod 'animateModule'
         @cookiesModule  = hasMod 'cookiesModule'
         @resourceModule = hasMod 'resourceModule'
-        @routeModule    = hasMod 'routeModule'
         @sanitizeModule = hasMod 'sanitizeModule'
         @touchModule    = hasMod 'touchModule'
         done()
 
   saveConfig: ->
-    @config.set 'appName',  @appName
-    @config.set 'sharedModuleName',  @_classify @answers.sharedModuleName
-    @topLevelModuleName = @config.set 'topLevelModuleName', @answers.topLevelModuleName
-    @wireModuleName     = @config.set 'wireModuleName', "#{@topLevelModuleName}.Wire"
-    @appPath            = @config.set 'appPath',  @options.appPath
-    @testPath           = @config.set 'testPath',  @options.testPath
-    @directiveNamespace = @config.set 'directiveNamespace',  @answers.directiveNamespace
+    configs =
+      appName             : @appName
+      sharedModuleName    : @answers.sharedModuleName
+      topLevelModuleName  : @answers.topLevelModuleName
+      wireModuleName      : "#{@answers.topLevelModuleName}.Wire"
+      appPath             : @options.appPath
+      testPath            : @options.testPath
+      directiveNamespace  : @answers.directiveNamespace
+    @config.set configs
+
+    # avoid the debounce tick for auto-saving from @config.set
+    @config.forceSave()
+
+    # load our config settings as local properties
+    @_.extend @, configs
 
 
   writing:
@@ -121,7 +124,7 @@ class AppGenerator extends yeoman.generators.Base
     createWireModule: ->
       @composeWith "k3:module",
         arguments: [@wireModuleName]
-        options: topLevel: true
+        options: topLevel: true, isWireframe: true
 
     createSharedModule: ->
       @composeWith "k3:module",
@@ -140,6 +143,7 @@ class AppGenerator extends yeoman.generators.Base
       @template '_gulpfile.coffee'    , 'gulpfile.coffee'
       @template '_gitignore'          , '.gitignore'
       @template 'index.html'          , @appPath + '/index.html'
+      @template '_home.jade'          , @appPath + '/partials/home.jade'
       @template '_header.jade'        , @appPath + '/partials/header.jade'
       @template '_header-mobile.jade' , @appPath + '/partials/header-mobile.jade'
       @template '_footer.jade'        , @appPath + '/partials/footer.jade'
@@ -158,8 +162,6 @@ class AppGenerator extends yeoman.generators.Base
         enabledComponents.push 'angular-cookies/angular-cookies.js'
       if @resourceModule
         enabledComponents.push 'angular-resource/angular-resource.js'
-      if @routeModule
-        enabledComponents.push 'angular-route/angular-route.js'
       if @sanitizeModule
         enabledComponents.push 'angular-sanitize/angular-sanitize.js'
       if @touchModule
@@ -171,6 +173,7 @@ class AppGenerator extends yeoman.generators.Base
         'angular-mocks/angular-mocks.js'
       ].concat(enabledComponents).join ','
 
+      @log '\n\n'
       @composeWith 'karma:app',
         options:
           'base-path': '../../'
@@ -187,8 +190,10 @@ class AppGenerator extends yeoman.generators.Base
 
     injectDependencies: ->
       done = @async()
+      @log '\n\n'
       @spawnCommand('gulp', ['wiredep', 'wireup']).on 'exit', =>
         @log """
+
 
           After running `npm install & bower install`, inject your front end dependencies
           into your source code by running:
@@ -204,14 +209,16 @@ class AppGenerator extends yeoman.generators.Base
         done()
 
     goodbye: ->
+      # TODO: chalk it up!
       @log """
+
 
         As you where, gents!
         Run `gulp watch` to get everything up and running!
       """
 
 
-  #Private
+  # Private
   _classify: (name)->
     @_.classify @_.underscored name
 
