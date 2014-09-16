@@ -1,10 +1,10 @@
 sharedModules = [
   'mm.foundation'
-  'ui.utils'<% if (animateModule) { %>
-  'ngAnimate'<% } %><% if (cookiesModule) { %>
-  'ngCookies'<% } %><% if (resourceModule) { %>
-  'ngResource'<% } %><% if (sanitizeModule) { %>
-  'ngSanitize'<% } %><% if (touchModule) { %>
+  'ui.utils'<% if (options.animateModule) { %>
+  'ngAnimate'<% } %><% if (options.cookiesModule) { %>
+  'ngCookies'<% } %><% if (options.resourceModule) { %>
+  'ngResource'<% } %><% if (options.sanitizeModule) { %>
+  'ngSanitize'<% } %><% if (options.touchModule) { %>
   'ngTouch'<% } %>
 ]
 

@@ -17,11 +17,11 @@
     "moment": "~2.8.1",
     "angular-ui-utils": "bower",
     "animate.css": "~3.2.0",
-    "lodash": "~2.4.1"<% if (resourceModule) { %>,
-    "angular-resource": "<%= ngVer %>"<% } %><% if (cookiesModule) { %>,
-    "angular-cookies": "<%= ngVer %>"<% } %><% if (sanitizeModule) { %>,
-    "angular-sanitize": "<%= ngVer %>"<% } %><% if (animateModule) { %>,
-    "angular-animate": "<%= ngVer %>"<% } %><% if (touchModule) { %>,
+    "lodash": "~2.4.1"<% if (angularModules.resourceModule) { %>,
+    "angular-resource": "<%= ngVer %>"<% } %><% if (angularModules.cookiesModule) { %>,
+    "angular-cookies": "<%= ngVer %>"<% } %><% if (angularModules.sanitizeModule) { %>,
+    "angular-sanitize": "<%= ngVer %>"<% } %><% if (angularModules.animateModule) { %>,
+    "angular-animate": "<%= ngVer %>"<% } %><% if (angularModules.touchModule) { %>,
     "angular-touch": "<%= ngVer %>"<% } %>
   },
   "devDependencies": {

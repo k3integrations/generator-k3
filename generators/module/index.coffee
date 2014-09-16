@@ -29,6 +29,31 @@ class ModuleGenerator extends K3Generator
       desc: 'Sets this as the module for the wireframe version of the app.'
       defaults: false
 
+    @option 'animateModule',
+      type: Boolean
+      required: false
+      defaults: false
+
+    @option 'cookiesModule',
+      type: Boolean
+      required: false
+      defaults: false
+
+    @option 'resourceModule',
+      type: Boolean
+      required: false
+      defaults: false
+
+    @option 'sanitizeModule',
+      type: Boolean
+      required: false
+      defaults: false
+
+    @option 'touchModule',
+      type: Boolean
+      required: false
+      defaults: false
+
 
   writing: ->
     @scriptsPath  = "#{@appPath}/scripts"

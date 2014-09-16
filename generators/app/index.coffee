@@ -90,11 +90,12 @@ class AppGenerator extends yeoman.generators.Base
       ]
       @prompt prompts, (answers)=>
         hasMod = (mod) -> ~answers.modules.indexOf(mod)
-        @animateModule  = hasMod 'animateModule'
-        @cookiesModule  = hasMod 'cookiesModule'
-        @resourceModule = hasMod 'resourceModule'
-        @sanitizeModule = hasMod 'sanitizeModule'
-        @touchModule    = hasMod 'touchModule'
+        @angularModules =
+          animateModule  : hasMod 'animateModule'
+          cookiesModule  : hasMod 'cookiesModule'
+          resourceModule : hasMod 'resourceModule'
+          sanitizeModule : hasMod 'sanitizeModule'
+          touchModule    : hasMod 'touchModule'
         done()
 
   saveConfig: ->
@@ -127,9 +128,12 @@ class AppGenerator extends yeoman.generators.Base
         options: topLevel: true, isWireframe: true
 
     createSharedModule: ->
+      sharedOptions = @_.extend {}, @angularModules,
+        shared: true
+
       @composeWith "k3:module",
         arguments: [@config.get 'sharedModuleName']
-        options: shared: true
+        options: sharedOptions
 
     createMainModule: ->
       @composeWith "k3:module",
@@ -156,15 +160,15 @@ class AppGenerator extends yeoman.generators.Base
     karma: ->
       enabledComponents = []
 
-      if @animateModule
+      if @angularModules.animateModule
         enabledComponents.push 'angular-animate/angular-animate.js'
-      if @cookiesModule
+      if @angularModules.cookiesModule
         enabledComponents.push 'angular-cookies/angular-cookies.js'
-      if @resourceModule
+      if @angularModules.resourceModule
         enabledComponents.push 'angular-resource/angular-resource.js'
-      if @sanitizeModule
+      if @angularModules.sanitizeModule
         enabledComponents.push 'angular-sanitize/angular-sanitize.js'
-      if @touchModule
+      if @angularModules.touchModule
         enabledComponents.push 'angular-touch/angular-touch.js'
 
       enabledComponents = [
