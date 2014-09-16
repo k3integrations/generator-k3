@@ -212,10 +212,8 @@ class AppGenerator extends yeoman.generators.Base
         """
       .on 'exit', =>
         @log """
-
-
-          After running `npm install & bower install`, inject your front end dependencies
-          into your source code by running:
+          We have just run `npm install & bower install` for you, and injected
+          your front end dependencies into your source code by running:
 
           #{chalk.yellow.bold 'gulp wiredep'}
           #{chalk.yellow.bold 'gulp wireup'}
