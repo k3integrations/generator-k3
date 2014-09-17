@@ -1,0 +1,29 @@
+.site-navigation { @extend .fixed; }
+
+.off-canvas-wrap {
+  height: 100%;
+
+  .inner-wrap {
+    height: 100%;
+
+    .page-content {
+      height: 100%;
+      overflow: auto;
+    }
+  }
+
+  &.move-right,
+  &.move-left {
+    .inner-wrap .page-content {
+      overflow: hidden;
+    }
+  }
+}
+
+.subheader {
+  margin-bottom: 0;
+
+  img { padding: 1em 0 0 0; }
+
+  .columns { padding: 0; }
+}

@@ -1,0 +1,41 @@
+@import "../bower_components/foundation/scss/foundation/_functions.scss";
+
+// GENERAL
+$primary-color:         hsl(0,0%,20%);
+$primary-color-light:   lighten($primary-color, 10%);
+$emphasis-color:        #0e315b;
+$emphasis-color-light:  #dce5ea;
+$text-color:            #1e1e1e;
+$gray:                  lighten(#000, 50%);
+$gray-light:            lighten(#000, 75%);
+
+
+// TYPOGRAPHY
+$paragraph-line-height: 1.4;
+
+
+// TOP BAR
+$topbar-height:           45px;
+$topbar-margin-bottom:    0;
+$topbar-title-weight:     300;
+$topbar-title-font-size:  rem-calc(16);
+$topbar-link-font-size:   rem-calc(14);
+
+
+// TAB BAR
+$tabbar-right-section-border: solid 1px scale-color($topbar-bg, $lightness: 13%);
+$tabbar-left-section-border:  solid 1px scale-color($topbar-bg, $lightness: -50%);
+
+
+// bower:scss
+@import "../bower_components/foundation/scss/foundation.scss";
+// endbower
+
+@import 'util';
+@import 'reveal-modal-overrides';
+@import 'wireframing';
+@import 'site-navigation';
+@import 'site-header';
+@import 'site-footer';
+@import 'home';
+@import 'login';

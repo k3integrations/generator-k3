@@ -1,0 +1,19 @@
+form.login {
+  label {
+    color: white;
+  }
+}
+
+
+.top-bar-section {
+  form.login {
+    input[type="text"], input[type="password"]{
+      width: 10em;
+      position: static;
+    }
+  }
+
+  .dropdown label {
+    color: white;
+  }
+}

@@ -153,26 +153,39 @@ class AppGenerator extends K3Generator
     git: ->
       @template '_gitignore', '.gitignore'
 
+    karma: ->
+      @template '_karma.conf.coffee', 'karma.conf.coffee'
+
     scripts: ->
       scriptsPath = "#{@appPath}/scripts"
       wfPath      = "#{scriptsPath}/#{@dasherize @wireModuleName}"
       sharePath   = "#{scriptsPath}/#{@dasherize @sharedModuleName}"
-      @template '_jquery.parseParams.coffee', "#{wfPath}/jquery.parseParams.coffee"
-      @template '_fakerFixes.coffee'        , "#{wfPath}/fakerFixes.coffee"
-      @template '_mockModels.coffee'        , "#{wfPath}/services/mockModels.coffee"
-      @template '_mocks.coffee'             , "#{wfPath}/services/mocks.coffee"
-      @template '_holderJSDirective.coffee' , "#{sharePath}/directives/holder.coffee"
 
-    karma: ->
-      @template '_karma.conf.coffee', 'karma.conf.coffee'
+      @template 'scripts/_jquery.parseParams.coffee', "#{wfPath}/jquery.parseParams.coffee"
+      @template 'scripts/_fakerFixes.coffee'        , "#{wfPath}/fakerFixes.coffee"
+      @template 'scripts/_mockModels.coffee'        , "#{wfPath}/services/mockModels.coffee"
+      @template 'scripts/_mocks.coffee'             , "#{wfPath}/services/mocks.coffee"
+      @template 'scripts/_holderJSDirective.coffee' , "#{sharePath}/directives/holder.coffee"
+
+    styles: ->
+      stylePath = "#{@appPath}/styles"
+      @template 'styles/_main.scss'           , "#{stylePath}/main.scss"
+      @template 'styles/_wireframing.scss'    , "#{stylePath}/_wireframing.scss"
+      @template 'styles/_util.scss'           , "#{stylePath}/_util.scss"
+      @template 'styles/_reveal-modal-overrides.scss' , "#{stylePath}/_reveal-modal-overrides.scss"
+      @template 'styles/_site-navigation.scss', "#{stylePath}/_site-navigation.scss"
+      @template 'styles/_site-header.scss'    , "#{stylePath}/_site-header.scss"
+      @template 'styles/_site-footer.scss'    , "#{stylePath}/_site-footer.scss"
+      @template 'styles/_home.scss'           , "#{stylePath}/_home.scss"
+      @template 'styles/_login.scss'          , "#{stylePath}/_login.scss"
 
     html: ->
       partialsPath = "#{@appPath}/partials"
-      @template 'index.html'          , "#{@appPath}/index.html"
-      @template '_home.jade'          , "#{partialsPath}/home.jade"
-      @template '_header.jade'        , "#{partialsPath}/header.jade"
-      @template '_header-mobile.jade' , "#{partialsPath}/header-mobile.jade"
-      @template '_footer.jade'        , "#{partialsPath}/footer.jade"
+      @template 'html/index.html'         , "#{@appPath}/index.html"
+      @template 'html/_home.jade'         , "#{partialsPath}/home.jade"
+      @template 'html/_header.jade'       , "#{partialsPath}/header.jade"
+      @template 'html/_header-mobile.jade', "#{partialsPath}/header-mobile.jade"
+      @template 'html/_footer.jade'       , "#{partialsPath}/footer.jade"
 
 
   install: -> @installDependencies()

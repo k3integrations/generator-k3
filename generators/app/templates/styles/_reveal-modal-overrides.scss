@@ -1,0 +1,12 @@
+body > .reveal-modal {
+  overflow: auto;
+
+  @media #{$medium-up} {
+    max-height: 80%;
+    top: 10%;
+  }
+
+  @media #{$small-only} {
+    height: 100%;
+  }
+}
