@@ -33,55 +33,55 @@ To get you up and running in a hurry!
 
 ### k3:app [appName]
 
-    yo k3 MyApp
+    $ yo k3 MyApp
 
 Generates a basic app setup. This is the default task that will run if you don’t give a specific generator to the `k3` namespace. If no `appName` is given, it will try to guess it from the parent directory’s name.
 
 ### k3:constant <constantName>
 
-    yo k3:constant TheTruth
+    $ yo k3:constant TheTruth
 
 Creates an AngularJS constant service and hooks it into the app. Also creates a spec file for testing.
 
 ### k3:controller <controllerName>
 
-    yo k3:controller Things
+    $ yo k3:controller Things
 
 Creates an AngularJS controller (post-fixes the name with “Ctrl”, so, “ThingsCtrl” in this example). Also creates a spec file for testing.
 
 ### k3:decorator <decoratedServiceName>
 
-    yo k3:decorator Things
+    $ yo k3:decorator Things
 
 Creates a decorator for the specified service. Also creates a spec file for testing.
 
 ### k3:directive <directiveName>
 
-    yo k3:directive SpecialButton
+    $ yo k3:directive SpecialButton
 
 Creates an AngularJS directive file and hooks it into the app. Also creates a spec file for testing. The name given will be prefixed with the directive namespace that was created when `k3:app` was initially run. This namespace can be found in the .yo-rc.json file.
 
 ### k3:factory <factoryName>
 
-    yo k3:factory Widget
+    $ yo k3:factory Widget
 
 Creates an AngularJS factory and hooks it into the app. Also creates a spec file for testing.
 
 ### k3:filter <filterName>
 
-    yo k3:filter truncate
+    $ yo k3:filter truncate
 
 Creates an AngularJS filter file and hooks it into the app. Also creates a spec file for testing. The convention is to use camel-cased names with the first letter lowercased.
 
 ### k3:module <moduleName> [--shared|--topLevel|--isWireframe|--(animate|cookies|resource|sanitize|touch)Module]
 
-    yo k3:module Home
+    $ yo k3:module Home
 
 Creates a directory for the module and an AngularJS module file called main.coffee inside of it. When given the `--shared` option, it will create a special module that will be shared with all other modules. When given the `--topLevel` option, it creates a module that is expected to be used at the top-level of an app (like in the `<html>` tag of the main index.html file). When `k3:app` is run, it prompts for the names of your top-level module, your shared module and the first module of your app. It composes with this generator to actually generate those modules and uses the available options outlined above to make that happen.
 
 ### k3:provider <providerName>
 
-    yo k3:provider Widget
+    $ yo k3:provider Widget
 
 Creates an AngularJS provider and hooks it into the app. Also creates a spec file for testing.
 
@@ -89,13 +89,13 @@ Creates an AngularJS provider and hooks it into the app. Also creates a spec fil
 
 ### k3:service <serviceName>
 
-    yo k3:service Widget
+    $ yo k3:service Widget
 
 Creates an AngularJS service and hooks it into the app. Also creates a spec file for testing.
 
 ### k3:value <variableName>
 
-    yo k3:value answerToEverything
+    $ yo k3:value answerToEverything
 
 Creates an AngularJS value service and hooks it into the app. Also creates a spec file for testing.
 
