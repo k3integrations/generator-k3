@@ -10,9 +10,8 @@ class K3NamedGenerator extends K3Generator
 
     @name ?= ""
     @_parseName()
-    @cameledName    = @_.camelize(@name)
-    @classedName    = @_.classify(@name)
-    @name           = @_.classify @_.underscored @name
+    @cameledName    = @camelize(@name)
+    @classedName    = @classify(@name)
 
 
   prompting: ->
@@ -23,7 +22,7 @@ class K3NamedGenerator extends K3Generator
 
       for path in modulePaths
         nameParts = path.split('/')
-        modules.push @_.classify nameParts[nameParts.length - 2]
+        modules.push @classify nameParts[nameParts.length - 2]
 
       return @log.error "No existing modules" unless modules.length
 
@@ -38,16 +37,15 @@ class K3NamedGenerator extends K3Generator
 
 
   writing: ->
-    @moduleName = @_.classify @_.underscored @moduleName
     @scriptAppName  = "#{@topLevelModuleName}.#{@moduleName}"
-    @moduleSlug     = @_.underscored @moduleName
-    @componentSlug  = @_.underscored @name
+    @moduleSlug     = @dasherize @moduleName
+    @componentSlug  = @cameledName
     @_writeSourceAndSpec()
 
 
   _writeSourceAndSpec: ->
     @template "#{@componentName}.coffee", "#{@appPath}/scripts/#{@moduleSlug}/#{@componentName}s/#{@componentSlug}.coffee"
-    @template "#{@componentName}_spec.coffee", "#{@testPath}/#{@moduleSlug}/#{@componentName}s/#{@componentSlug}_spec.coffee"
+    @template "#{@componentName}Spec.coffee", "#{@testPath}/#{@moduleSlug}/#{@componentName}s/#{@componentSlug}Spec.coffee"
 
 
   _parseName: ->

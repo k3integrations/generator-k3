@@ -64,23 +64,22 @@ class ModuleGenerator extends K3Generator
 
     templateName = switch
       when @options.shared    then 'shared.coffee'
-      when @options.topLevel  then 'top_module.coffee'
+      when @options.topLevel  then 'topModule.coffee'
       else                         'module.coffee'
 
     @isWireframe = @options.isWireframe
-    @template templateName, "#{@scriptsPath}/#{@fileName}.coffee"
+    @template templateName, "#{@scriptsPath}/#{@camelize @moduleName}.coffee"
 
   end: ->
     unless @options.topLevel
       newModuleLine = "  '#{@topLevelModuleName}.#{@moduleName}'"
-      @insertLine "#{@scriptsPath}/#{@_.underscored @topLevelModuleName}.coffee",
+      @insertLine "#{@scriptsPath}/#{@camelize @topLevelModuleName}.coffee",
         newModuleLine
-      @insertLine "#{@scriptsPath}/#{@_fileName @wireModuleName}.coffee",
+      @insertLine "#{@scriptsPath}/#{@camelize @wireModuleName}.coffee",
         newModuleLine
 
 
-  _fileName: (name) ->
-    @_.underscored(name).replace('.', '-')
+  _fileName: (name) -> @dasherize(name)
 
 
 module.exports =  ModuleGenerator

@@ -27,7 +27,7 @@ module.exports = (config) ->
       './<%= appPath %>/bower_components/holderjs/holder.js'
       './<%= appPath %>/bower_components/moment/moment.js'
       './<%= appPath %>/scripts/**/*.coffee'
-      './<%= testPath %>/**/*_spec.coffee'
+      './<%= testPath %>/**/*Spec.coffee'
     ]
 
 

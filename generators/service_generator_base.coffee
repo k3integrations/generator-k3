@@ -18,7 +18,7 @@ class ServiceGeneratorBase extends K3NamedGenerator
 
   _writeSourceAndSpec: ->
     @template "#{@componentName}.coffee", "#{@appPath}/scripts/#{@moduleSlug}/services/#{@componentSlug}.coffee"
-    @template "../../service/templates/service_spec.coffee", "#{@testPath}/#{@moduleSlug}/services/#{@componentSlug}_spec.coffee"
+    @template "../../service/templates/serviceSpec.coffee", "#{@testPath}/#{@moduleSlug}/services/#{@componentSlug}Spec.coffee"
 
 
 module.exports =  ServiceGeneratorBase
