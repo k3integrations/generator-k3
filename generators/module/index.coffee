@@ -57,10 +57,8 @@ class ModuleGenerator extends K3Generator
 
   writing: ->
     @scriptsPath  = "#{@appPath}/scripts"
-    @fileName     = @_fileName @moduleName
-    @modulePath   = "#{@scriptsPath}/#{@fileName}"
+    @modulePath   = "#{@scriptsPath}/#{@dasherize @moduleName}"
     @mkdir @scriptsPath
-    @dest.write "#{@modulePath}/.gitkeep", ''
 
     templateName = switch
       when @options.shared    then 'shared.coffee'
@@ -68,18 +66,15 @@ class ModuleGenerator extends K3Generator
       else                         'module.coffee'
 
     @isWireframe = @options.isWireframe
-    @template templateName, "#{@scriptsPath}/#{@camelize @moduleName}.coffee"
+    @template templateName, "#{@modulePath}/main.coffee"
 
   end: ->
     unless @options.topLevel
       newModuleLine = "  '#{@topLevelModuleName}.#{@moduleName}'"
-      @insertLine "#{@scriptsPath}/#{@camelize @topLevelModuleName}.coffee",
+      @insertLine "#{@scriptsPath}/#{@dasherize @topLevelModuleName}/main.coffee",
         newModuleLine
-      @insertLine "#{@scriptsPath}/#{@camelize @wireModuleName}.coffee",
+      @insertLine "#{@scriptsPath}/#{@dasherize @wireModuleName}/main.coffee",
         newModuleLine
-
-
-  _fileName: (name) -> @dasherize(name)
 
 
 module.exports =  ModuleGenerator
