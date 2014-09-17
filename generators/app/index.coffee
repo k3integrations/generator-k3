@@ -155,7 +155,7 @@ class AppGenerator extends K3Generator
 
     scripts: ->
       scriptsPath = "#{@appPath}/scripts"
-      wfPath      = "#{scriptsPath}/#{@dasherize wireModuleName}"
+      wfPath      = "#{scriptsPath}/#{@dasherize @wireModuleName}"
       sharePath   = "#{scriptsPath}/#{@dasherize @sharedModuleName}"
       @template '_jquery.parseParams.coffee', "#{wfPath}/jquery.parseParams.coffee"
       @template '_mockModels.coffee'        , "#{wfPath}/services/mockModels.coffee"
