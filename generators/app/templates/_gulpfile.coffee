@@ -153,11 +153,12 @@ gulp.task 'build-connect', ->
 gulp.task 'serve', ['connect', 'templates', 'styles', 'coffee', 'scripts'], ->
   require('opn')('http://localhost:9000')
 
-# inject bower components
-gulp.task 'wiredep', ['wiredep-css', 'wiredep-html']
-
-gulp.task 'wiredep-css', ->
+# inject all dependencies (bower, app)
+wireup = (dest, options={rails:false})->
   wiredep = require('wiredep').stream
+  replace = require('gulp-replace')
+
+  destDir = dest.split('/').slice(0, -1).join('/')
 
   gulp.src "#{appConfig.app}/styles/*.scss"
     .pipe wiredep
@@ -165,24 +166,31 @@ gulp.task 'wiredep-css', ->
       devDependencies: true
     .pipe gulp.dest("#{appConfig.app}/styles")
 
-gulp.task 'wiredep-html', ->
-  wiredep = require('wiredep').stream
+  stream = gulp.src(dest)
+    .pipe($.inject(gulp.src('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(wireModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(topLevelModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
 
-  gulp.src "#{appConfig.app}/*.html"
-    .pipe wiredep
-      directory: "#{appConfig.app}/bower_components"
-      devDependencies: true
-    .pipe gulp.dest(appConfig.app)
+    stream = if options.rails
+      stream.pipe wiredep
+        directory: "#{appConfig.app}/bower_components"
+      .pipe replace("../../../client/#{appConfig.app}/", '')
+    else
+      stream.pipe wiredep
+        directory: "#{appConfig.app}/bower_components"
+        devDependencies: true
 
-gulp.task 'wiredep-rails', ->
-  wiredep = require('wiredep').stream
-  replace = require('gulp-replace')
+    stream.pipe(gulp.dest(destDir))
 
-  gulp.src '../app/views/layouts/application.html.erb'
-    .pipe wiredep
-      directory: "#{appConfig.app}/bower_components"
-    .pipe replace("../../../client/#{appConfig.app}/", '')
-    .pipe gulp.dest('../app/views/layouts')
+# Important: we must start wiredep only after coffee has been run, therefore,
+# we cannot just _depend_ on this like we do with coffee, otherwise coffee will
+# run parallel to wiredep
+gulp.task 'wiredep', ['coffee'], -> gulp.start 'wiredep-only'
+
+gulp.task 'wiredep-only', -> wireup "#{appConfig.app}/*.html"
+
+gulp.task 'rails-wiredep', ['coffee', 'rails-wiredep-only']
+gulp.task 'rails-wiredep-only', -> wireup '../app/views/layouts/application.html.erb', rails: true
 
 gulp.task 'livereload', ->
   liveReloadables = [
@@ -213,17 +221,17 @@ watch = ->
 
 # gulp.watch 'these files', ['then do', 'these tasks', 'on each']
 gulp.task 'watch', ['connect', 'serve', 'livereload'], ->
-  gulp.watch 'bower.json',              ['wiredep']
+  gulp.watch 'bower.json',              ['wiredep-only']
   gulp.watch '.tmp/scripts/**/*.js',    (event) ->
     if ~['added', 'deleted'].indexOf event.type
-      gulp.start 'wireup-only'
+      gulp.start 'wiredep-only'
   watch()
 
 gulp.task 'dev', ['templates', 'styles', 'coffee', 'scripts'], (cb)->
   gulp.watch 'bower.json',              ['wiredep-rails']
   gulp.watch '.tmp/scripts/**/*.js',    (event) ->
     if ~['added', 'deleted'].indexOf event.type
-      gulp.start 'rails-wireup-only'
+      gulp.start 'rails-wiredep-only'
   watch()
   # TODO: do we want to start rails from here, and if so how?
   #require('child_process').exec 'cd .. && rails s', (err, stdout, stderr)->
@@ -231,17 +239,3 @@ gulp.task 'dev', ['templates', 'styles', 'coffee', 'scripts'], (cb)->
     #console.log stderr
     #cb(err)
   require('opn')('http://localhost:3000')
-
-wireup = (dest)->
-  destDir = dest.split('/').slice(0, -1).join('/')
-  gulp.src(dest)
-    .pipe($.inject(gulp.src('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/<%= dasherize(wireModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/<%= dasherize(topLevelModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
-    .pipe(gulp.dest(destDir))
-
-gulp.task 'wireup-only', -> wireup("#{appConfig.app}/index.html")
-gulp.task 'wireup', ['coffee', 'wireup-only']
-gulp.task 'rails-wireup-only', -> wireup('../app/views/layouts/application.html.erb')
-gulp.task 'rails-wireup', ['coffee', 'rails-wireup-only']
-gulp.task 'wireall', ['wiredep', 'wireup']

@@ -219,20 +219,21 @@ class AppGenerator extends K3Generator
 
     injectDependencies: ->
       done = @async()
-      @log '\n\n'
-      @spawnCommand('gulp', ['wireall'])
+      @spawnCommand('gulp', ['wiredep'])
       .on 'error', =>
         @log chalk.red.bold """
           Please ensure you have gulp installed then run:
 
-          gulp wireall
+          gulp wiredep
         """
       .on 'exit', =>
         @log """
+
+
           We have just run `npm install & bower install` for you, and injected
           your front end dependencies into your source code by running:
 
-          #{chalk.yellow.bold 'gulp wireall'}
+          #{chalk.yellow.bold 'gulp wiredep'}
 
           In the future this will be taken care of by `gulp watch` while your app is running.
         """
