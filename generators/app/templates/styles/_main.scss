@@ -22,11 +22,6 @@ $topbar-title-font-size:  rem-calc(16);
 $topbar-link-font-size:   rem-calc(14);
 
 
-// TAB BAR
-$tabbar-right-section-border: solid 1px scale-color($topbar-bg, $lightness: 13%);
-$tabbar-left-section-border:  solid 1px scale-color($topbar-bg, $lightness: -50%);
-
-
 // bower:scss
 @import "../bower_components/foundation/scss/foundation.scss";
 // endbower

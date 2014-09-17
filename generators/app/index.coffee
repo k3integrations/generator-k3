@@ -161,11 +161,14 @@ class AppGenerator extends K3Generator
       wfPath      = "#{scriptsPath}/#{@dasherize @wireModuleName}"
       sharePath   = "#{scriptsPath}/#{@dasherize @sharedModuleName}"
 
-      @template 'scripts/_jquery.parseParams.coffee', "#{wfPath}/jquery.parseParams.coffee"
-      @template 'scripts/_fakerFixes.coffee'        , "#{wfPath}/fakerFixes.coffee"
-      @template 'scripts/_mockModels.coffee'        , "#{wfPath}/services/mockModels.coffee"
-      @template 'scripts/_mocks.coffee'             , "#{wfPath}/services/mocks.coffee"
-      @template 'scripts/_holderJSDirective.coffee' , "#{sharePath}/directives/holder.coffee"
+      @template 'scripts/_jquery.parseParams.coffee'  , "#{wfPath}/jquery.parseParams.coffee"
+      @template 'scripts/_fakerFixes.coffee'          , "#{wfPath}/fakerFixes.coffee"
+      @template 'scripts/_mockModels.coffee'          , "#{wfPath}/services/mockModels.coffee"
+      @template 'scripts/_mocks.coffee'               , "#{wfPath}/services/mocks.coffee"
+      @template 'scripts/_exitOffCanvas.coffee'       , "#{sharePath}/directives/exitOffCanvas.coffee"
+      @template 'scripts/_holderJSDirective.coffee'   , "#{sharePath}/directives/holder.coffee"
+      @template 'scripts/_markWhenTop.coffee'         , "#{sharePath}/directives/markWhenTop.coffee"
+      @template 'scripts/_stopClickPropagation.coffee', "#{sharePath}/directives/stopClickPropagation.coffee"
 
     styles: ->
       stylePath = "#{@appPath}/styles"
