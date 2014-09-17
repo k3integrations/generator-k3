@@ -27,7 +27,7 @@ To get you up and running in a hurry!
 - When making requests, use `$httpBackend` mock service, this makes it easy to hook up to Rails later
 - Wireframe project is included in main project as a git submodule
 - If you make a service that only works in one of the two environments, at least make a dummy to fill its spot for the other environment
-- *Rule of thumb:* Any script file not in the `Wire` module should be designed in such a way as to work with Rails eventually _without_ modification. Usually the only place this is not possible is in the views, but those should only have attributes of equivalent functionality to the a Rails counterpart (e.g. `ng-repeat` becomes a `.each do` loop).
+- **Rule of thumb:** Any script file not in the `Wire` module should be designed in such a way as to work with Rails eventually _without_ modification. Usually the only place this is not possible is in the views, but those should only have attributes of equivalent functionality to the a Rails counterpart (e.g. `ng-repeat` becomes a `.each do` loop).
 
 ## Generator API
 
