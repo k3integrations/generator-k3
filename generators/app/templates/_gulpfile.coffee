@@ -244,3 +244,4 @@ gulp.task 'wireup-only', -> wireup("#{appConfig.app}/index.html")
 gulp.task 'wireup', ['coffee', 'wireup-only']
 gulp.task 'rails-wireup-only', -> wireup('../app/views/layouts/application.html.erb')
 gulp.task 'rails-wireup', ['coffee', 'rails-wireup-only']
+gulp.task 'wireall', ['wiredep', 'wireup']
