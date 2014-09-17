@@ -1,10 +1,11 @@
 'use strict'
 
-chalk   = require 'chalk'
-path    = require 'path'
-yeoman  = require 'yeoman-generator'
+chalk       = require 'chalk'
+path        = require 'path'
+yeoman      = require 'yeoman-generator'
+K3Generator = require "../generator"
 
-class AppGenerator extends yeoman.generators.Base
+class AppGenerator extends K3Generator
   constructor: ->
     super
 
@@ -154,7 +155,7 @@ class AppGenerator extends yeoman.generators.Base
 
     scripts: ->
       scriptsPath = "#{@appPath}/scripts"
-      @template '_holderJSDirective.coffee' , "#{scriptsPath}/#{@_.underscored @sharedModuleName}/directives/holder.coffee"
+      @template '_holderJSDirective.coffee' , "#{scriptsPath}/#{@dasherize @sharedModuleName}/directives/holder.coffee"
 
     karma: ->
       @template '_karma.conf.coffee'  , 'karma.conf.coffee'
