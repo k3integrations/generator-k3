@@ -230,9 +230,9 @@ gulp.task 'dev', ['templates', 'styles', 'coffee', 'scripts'], (cb)->
 wireup = (dest)->
   destDir = dest.split('/').slice(0, -1).join('/')
   gulp.src(dest)
-    .pipe($.inject(gulp.src('scripts/alc-base/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/alc-wire/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/alc/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-alc', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(wireModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(topLevelModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
     .pipe(gulp.dest(destDir))
 
 gulp.task 'wireup-only', -> wireup("#{appConfig.app}/index.html")
