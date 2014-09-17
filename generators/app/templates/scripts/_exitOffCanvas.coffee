@@ -1,4 +1,4 @@
-angular.module('<%= topLevelModuleName %>.<%= sharedModuleName %>').directive '<%= directiveNamespace %>ExitOffCanvas', ->
+angular.module('<%= topLevelModuleName %>.<%= sharedModuleName %>').directive 'k3ExitOffCanvas', ->
   require   : '^offCanvasWrap'
   restrict  : 'AC'
   link      : ($scope, element, attrs, offCanvasWrap) ->

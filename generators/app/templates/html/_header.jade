@@ -27,12 +27,12 @@
           a(href='') Log In
           ul(top-bar-dropdown)
             li
-              form.login(<%= directiveNamespace %>-stop-click-propagation)
+              form.login(k3-stop-click-propagation)
                 label Email
                   input(type="text" ng-model="wfLogin")
                 label Password
                   input(type="password" ng-model="wfPassword")
-                input.button.expand(type="submit" value="Log In" ui-sref='login({login:wfLogin, password:wfPassword})' <%= directiveNamespace %>-stop-click-propagation)
+                input.button.expand(type="submit" value="Log In" ui-sref='login({login:wfLogin, password:wfPassword})' k3-stop-click-propagation)
 
         li(has-dropdown)
           a(href='') Menu

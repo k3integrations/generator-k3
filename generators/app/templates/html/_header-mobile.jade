@@ -22,16 +22,16 @@ aside.left-off-canvas-menu.show-for-small.off-canvas-list
     accordion-group(ng-if='!wfUser')
       accordion-heading
         a(ui-sref='register') Sign Up
-    accordion-group(ng-if='!wfUser' is-open="isopen" <%= directiveNamespace %>-stop-click-propagation)
+    accordion-group(ng-if='!wfUser' is-open="isopen" k3-stop-click-propagation)
       accordion-heading
         a(href='') Log In
         i.right(ng-class="{'fa fa-chevron-down': isopen, 'fa fa-chevron-right': !isopen}")
-      form(<%= directiveNamespace %>-stop-click-propagation).login
+      form(k3-stop-click-propagation).login
         label Email
           input(type="text" ng-model="wfLogin")
         label Password
           input(type="password" ng-model="wfPassword")
-        input.button.expand(type="submit" value="Log In" ui-sref='login({login:wfLogin, password:wfPassowrd})' <%= directiveNamespace %>-exit-off-canvas)
+        input.button.expand(type="submit" value="Log In" ui-sref='login({login:wfLogin, password:wfPassowrd})' k3-exit-off-canvas)
     accordion-group(ng-if='wfUser')
       accordion-heading
         a(ui-sref='dashboard') My Dashboard

@@ -1,4 +1,4 @@
-angular.module('<%= topLevelModuleName %>.<%= sharedModuleName %>').directive '<%= directiveNamespace %>MarkWhenTop', ->
+angular.module('<%= topLevelModuleName %>.<%= sharedModuleName %>').directive 'k3MarkWhenTop', ->
   link: (scope, element, attrs)->
     isAtTop = -> element.scrollTop() == 0
 
