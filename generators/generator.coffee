@@ -21,6 +21,10 @@ class K3Generator extends yeoman.generators.Base
 
   # Define dasherize the way we would expect it to work
   dasherize: (string, stringify=true)->
+    string = @cleanAcronyms string
+
+    # detect if string is an acronym (multiple caps in a row, e.g. ALC)
+    # lowercase the whole thing if it is
     str = @_(string.replace('.', '')).dasherize().trim('-')
     if stringify then str.toString() else str
 
@@ -29,6 +33,13 @@ class K3Generator extends yeoman.generators.Base
 
   camelize: (string)-> @dasherize(string, false).camelize().toString()
 
+  # Convert acronyms to camel-cased versions of themselves
+  #   cleanAcronyms('FBI') #=> 'Fbi'
+  #   cleanAcronyms('theFBIAndCIASecretDB') #=> 'theFbiAndCiaSecretDb'
+  cleanAcronyms: (string) ->
+    regex = /[A-Z]([A-Z]+)(?:[A-Z][a-z]|$)/g
+    string.replace regex, (match, capture) ->
+      match.replace capture, capture.toLowerCase()
 
 
 module.exports = K3Generator
