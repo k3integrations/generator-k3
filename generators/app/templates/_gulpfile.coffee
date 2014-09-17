@@ -154,7 +154,9 @@ gulp.task 'serve', ['connect', 'templates', 'styles', 'coffee', 'scripts'], ->
   require('opn')('http://localhost:9000')
 
 # inject bower components
-gulp.task 'wiredep', ->
+gulp.task 'wiredep', ['wiredep-css', 'wiredep-html']
+
+gulp.task 'wiredep-css', ->
   wiredep = require('wiredep').stream
 
   gulp.src "#{appConfig.app}/styles/*.scss"
@@ -162,6 +164,9 @@ gulp.task 'wiredep', ->
       directory: "#{appConfig.app}/bower_components"
       devDependencies: true
     .pipe gulp.dest("#{appConfig.app}/styles")
+
+gulp.task 'wiredep-html', ->
+  wiredep = require('wiredep').stream
 
   gulp.src "#{appConfig.app}/*.html"
     .pipe wiredep
