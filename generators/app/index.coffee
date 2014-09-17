@@ -232,9 +232,6 @@ class AppGenerator extends K3Generator
           #{chalk.yellow.bold 'gulp wireall'}
 
           In the future this will be taken care of by `gulp watch` while your app is running.
-
-          Also, remember you can configure karma processors. For example you may want sourcemaps.
-          For information checkout the coffeescript example at https://github.com/karma-runner/karma-coffee-preprocessor
         """
         done()
 
