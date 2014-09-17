@@ -19,7 +19,7 @@ class DirectiveGenerator extends K3NamedGenerator
 
   _namespaced: (name)->
     ns = @directiveNamespace || ''
-    @_.camelize(ns + @name)
+    @camelize(ns + @dasherize(@name, false).classify())
 
 
 module.exports =  DirectiveGenerator
