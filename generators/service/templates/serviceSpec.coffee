@@ -10,5 +10,5 @@ describe 'Service: <%= cameledName %>', ->
   beforeEach inject (_<%= cameledName %>_) ->
     <%= cameledName %> = _<%= cameledName %>_
 
-  it 'should do something', ->
+  it 'does something', ->
     expect(!!<%= cameledName %>).to.eq true

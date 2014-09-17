@@ -15,5 +15,5 @@ describe 'Controller: <%= cameledName %>Ctrl', ->
       $scope: scope
     }
 
-  it 'should attach a list of awesomeThings to the scope', ->
+  it 'attaches a list of awesomeThings to the scope', ->
     expect(scope.awesomeThings.length).to.eq 3

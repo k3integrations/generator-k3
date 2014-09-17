@@ -10,6 +10,6 @@ describe 'Filter: <%= cameledName %>', ->
   beforeEach inject ($filter) ->
     <%= cameledName %> = $filter '<%= cameledName %>'
 
-  it 'should return the input prefixed with "<%= cameledName %> filter:"', ->
+  it 'returns the input prefixed with "<%= cameledName %> filter:"', ->
     text = 'angularjs'
     expect(<%= cameledName %> text).to.eq '<%= cameledName %> filter: ' + text
