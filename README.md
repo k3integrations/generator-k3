@@ -1,4 +1,4 @@
-# K3 Generators for Yeoman
+# K3 Wireframing Generators for Yeoman
 
 ## Quick Start Guide
 
