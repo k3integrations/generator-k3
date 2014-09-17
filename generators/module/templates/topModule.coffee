@@ -4,7 +4,7 @@ appModules = [<% if (isWireframe) { %>
   #=== yeoman hook ===#
 ]
 
-app = angular.module '<%= appName %>', appModules
+app = angular.module '<%= moduleName %>', appModules
 <% if (isWireframe) { %>
 
 app.run ($rootScope) ->
