@@ -16,29 +16,31 @@ class K3NamedGenerator extends K3Generator
 
   prompting: ->
     unless @moduleName?
-      done = @async()
-      modules = []
+      done        = @async()
+      @modules    = {}
       modulePaths = @expand("#{@appPath}/scripts/*/")
 
       for path in modulePaths
         nameParts = path.split('/')
-        modules.push @classify nameParts[nameParts.length - 2]
+        dirName   = nameParts.slice(-2)[0]
+        modName   = dirName.replace("#{@dasherize @topLevelModuleName}-", '')
+        @modules[@classify modName] = dirName
 
-      return @log.error "No existing modules" unless modules.length
+      return @log.error "No existing modules" unless @_.keys(@modules).length
 
       @prompt
-        type: 'list'
-        name: 'moduleName'
-        message: 'Which module does it belong in?'
-        choices: modules
-      , (answers)=>
-        @moduleName =  answers.moduleName
+        type    : 'list'
+        name    : 'moduleName'
+        message : 'Which module does it belong in?'
+        choices : @_.map @modules, (dir, mod) -> "#{mod} (#{dir})"
+      , (answers) =>
+        @moduleName = answers.moduleName.replace /\s(.*)$/, ''
+        @moduleSlug = @modules[@moduleName]
         done()
 
 
   writing: ->
     @scriptAppName  = "#{@topLevelModuleName}.#{@moduleName}"
-    @moduleSlug     = @dasherize @moduleName
     @componentSlug  = @cameledName
     @_writeSourceAndSpec()
 
