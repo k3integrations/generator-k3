@@ -8,7 +8,7 @@ describe 'Directive: <%= namespacedCameledName %>', ->
   beforeEach inject ($rootScope, $compile)->
     @scope = $rootScope.$new()
     @el    = angular.element """
-      <div <%= _.dasherize(namespacedCameledName) %>></div>
+      <div <%= dasherize(namespacedCameledName) %>></div>
     """
     $compile(@el)(@scope)
     @scope.myText = "Hello World"

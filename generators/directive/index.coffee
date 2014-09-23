@@ -14,7 +14,7 @@ class DirectiveGenerator extends K3NamedGenerator
 
 
   writing: ->
-    @namespacedCameledName = @_namespacedName
+    @namespacedCameledName = @_namespacedName()
     super
 
   _namespacedName: ->
