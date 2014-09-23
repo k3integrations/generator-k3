@@ -27,7 +27,7 @@
           a(href='') Log In
           ul(top-bar-dropdown)
             li
-              form.login(k3-stop-click-propagation)
+              form.login(k3-stop-click-propagation ui-sref='login({login:wfLogin})')
                 label Email
                   input(type="text" ng-model="wfLogin.email")
                 label Password
