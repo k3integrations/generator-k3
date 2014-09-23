@@ -13,7 +13,7 @@ module.exports = (config) ->
    ## list of files / patterns to load in the browser
     files: [
       './<%= appPath %>/bower_components/jquery/dist/jquery.js'
-      './<%= appPath %>/bower_components/angular/angular.js'<% if (angularModules.resourceModule) { %>,
+      './<%= appPath %>/bower_components/angular/angular.js'<% if (angularModules.resourceModule) { %>
       './<%= appPath %>/bower_components/angular-resource/angular-resource.js'<% } %><% if (angularModules.cookiesModule) { %>
       './<%= appPath %>/bower_components/angular-cookies/angular-cookies.js'<% } %><% if (angularModules.sanitizeModule) { %>
       './<%= appPath %>/bower_components/angular-sanitize/angular-sanitize.js'<% } %><% if (angularModules.animateModule) { %>
@@ -26,6 +26,8 @@ module.exports = (config) ->
       './<%= appPath %>/bower_components/angular-ui-utils/ui-utils.js'
       './<%= appPath %>/bower_components/holderjs/holder.js'
       './<%= appPath %>/bower_components/moment/moment.js'
+      './<%= appPath %>/scripts/<%= dasherize(sharedModuleName) %>/main.coffee'
+      './<%= appPath %>/scripts/<%= dasherize(sharedModuleName) %>/**/*.coffee'
       './<%= appPath %>/scripts/**/*.coffee'
       './<%= testPath %>/**/*Spec.coffee'
     ]
