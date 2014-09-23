@@ -157,9 +157,10 @@ class AppGenerator extends K3Generator
       @template '_karma.conf.coffee', 'karma.conf.coffee'
 
     scripts: ->
-      scriptsPath = "#{@appPath}/scripts"
-      wfPath      = "#{scriptsPath}/#{@dasherize @wireModuleName}"
-      sharePath   = "#{scriptsPath}/#{@dasherize @sharedModuleName}"
+      scriptsPath   = "#{@appPath}/scripts"
+      wfPath        = "#{scriptsPath}/#{@dasherize @wireModuleName}"
+      sharePath     = "#{scriptsPath}/#{@dasherize @sharedModuleName}"
+      shareSpecPath = "#{@testPath}/#{@dasherize @sharedModuleName}"
 
       @template 'scripts/_jquery.parseParams.coffee'  , "#{wfPath}/jquery.parseParams.coffee"
       @template 'scripts/_fakerFixes.coffee'          , "#{wfPath}/fakerFixes.coffee"
@@ -169,6 +170,10 @@ class AppGenerator extends K3Generator
       @template 'scripts/_holderJSDirective.coffee'   , "#{sharePath}/directives/holder.coffee"
       @template 'scripts/_markWhenTop.coffee'         , "#{sharePath}/directives/markWhenTop.coffee"
       @template 'scripts/_stopClickPropagation.coffee', "#{sharePath}/directives/stopClickPropagation.coffee"
+      @template 'scripts/_truncateFilter.coffee'      , "#{sharePath}/filters/truncate.coffee"
+      @template 'scripts/_truncateFilterSpec.coffee'  , "#{shareSpecPath}/filters/truncateSpec.coffee"
+      @template 'scripts/_pluralizeFilter.coffee'     , "#{sharePath}/filters/pluralize.coffee"
+      @template 'scripts/_pluralizeFilterSpec.coffee' , "#{shareSpecPath}/filters/pluralizeSpec.coffee"
 
     styles: ->
       stylePath = "#{@appPath}/styles"
