@@ -15,4 +15,4 @@ describe 'Directive: <%= namespacedCameledName %>', ->
     @scope.$apply()
 
   it 'injects the expected text',  ->
-    expect(element.text()).to.eq 'Hello World, this is the <%= namespacedCameledName %> directive'
+    expect(@el.text()).to.eq 'Hello World, this is the <%= namespacedCameledName %> directive'
