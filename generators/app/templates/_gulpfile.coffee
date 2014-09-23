@@ -187,9 +187,9 @@ wireup = (dest, options={rails:false})->
   destDir = dest.split('/').slice(0, -1).join('/')
 
   stream = gulp.src(dest)
-    .pipe($.inject(gulp.src('scripts/!(test-gen|test-gen-wire)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/test-gen-wire/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/test-gen/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(wireModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/<%= dasherize(topLevelModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
 
     stream = if options.rails
       stream.pipe wireStream
