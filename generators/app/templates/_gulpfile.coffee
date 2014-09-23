@@ -26,18 +26,37 @@ gulp.task 'scripts', ->
     .pipe $.jshint.reporter(require 'jshint-stylish')
     .pipe $.size()
 
-coffeeFiles = null
-defaultCoffeeFiles = "#{appConfig.app}/scripts/**/*.coffee"
-gulp.task 'coffee', ->
-  source = coffeeFiles || defaultCoffeeFiles
-  gulp.src source
-    .pipe $.sourcemaps.init()
+coffee = (options = {watch: false})->
+  source = "#{appConfig.app}/scripts/**/*.coffee"
+
+  stream = gulp.src(source)
+
+  if options.watch
+    filterDeleted = $.filter (file)->
+      file.event == 'deleted'
+
+    watcher = $.watch source, name: "Coffee"
+
+    stream = stream
+      .pipe watcher
+      .pipe filterDeleted
+      .pipe $.rename (path)->
+        path.originalDirname = path.dirname
+        path.dirname = '../../.tmp/scripts/' + path.dirname
+        path.extname = ".js"
+        return
+      .pipe $.rimraf()
+      .pipe filterDeleted.restore()
+
+  stream.pipe $.sourcemaps.init()
     .pipe $.coffee()
     .on 'error', (err) ->
       console.log err.stack
       @emit 'end'
     .pipe $.sourcemaps.write('./maps')
     .pipe gulp.dest('.tmp/scripts/')
+
+gulp.task 'coffee', -> coffee(watch: false)
 
 gulp.task 'templates', ->
   gulp.src "#{appConfig.app}/partials/**/*.jade"
@@ -76,8 +95,8 @@ html = (dest, includeIndex=true)->
     .pipe $.size()
 
 
-gulp.task 'html', ['templates', 'styles', 'coffee', 'scripts'], -> html(appConfig.dist)
-gulp.task 'rails-html', ['templates', 'styles', 'coffee', 'scripts'], ->
+gulp.task 'html', gulp.series gulp.parallel('templates', 'styles', 'coffee', 'scripts'), -> html(appConfig.dist)
+gulp.task 'rails-html', gulp.series gulp.parallel('templates', 'styles', 'coffee', 'scripts'), ->
   html('../public', false)
 
 images = (dest)->
@@ -112,19 +131,18 @@ gulp.task 'rails-extras', -> extras('../public')
 
 gulp.task 'clean', ->
   gulp.src ['.tmp', appConfig.dist], { read: false }
-    .pipe $.clean()
+    .pipe $.rimraf()
 
 gulp.task 'rails-clean', ->
   gulp.src ['../public/*'], { dot: true, read: false }
     .pipe $.clean(force: true)
 
-gulp.task 'build', ['html', 'images', 'fonts', 'extras']
-gulp.task 'rails-build', ['rails-clean', 'rails-images', 'rails-html', 'rails-fonts', 'rails-extras']
+gulp.task 'build', gulp.parallel('html', 'images', 'fonts', 'extras')
+gulp.task 'rails-build', gulp.series('rails-clean', gulp.parallel('rails-images', 'rails-html', 'rails-fonts', 'rails-extras'))
 
-gulp.task 'default', ['clean'], ->
-  gulp.start 'build'
+gulp.task 'default', gulp.series('clean', 'build')
 
-gulp.task 'connect', ->
+gulp.task 'connect', (cb)->
   connect = require 'connect'
   app     = connect()
     .use require('connect-livereload')
@@ -138,9 +156,10 @@ gulp.task 'connect', ->
     .listen 9000
     .on 'listening', ->
       console.log 'Started connect web server on http://localhost:9000'
+      cb()
 
 
-gulp.task 'build-connect', ->
+gulp.task 'build-connect', (cb)->
   connect = require 'connect'
   app     = connect()
     .use connect.static(appConfig.dist)
@@ -149,50 +168,59 @@ gulp.task 'build-connect', ->
     .listen 9000
     .on 'listening', ->
       console.log 'Started connect web server on http://localhost:9000'
+      cb()
 
-gulp.task 'serve', ['connect', 'templates', 'styles', 'coffee', 'scripts'], ->
-  require('opn')('http://localhost:9000')
 
-# inject all dependencies (bower, app)
-wireup = (dest, options={rails:false})->
-  wiredep = require('wiredep').stream
-  replace = require('gulp-replace')
-
-  destDir = dest.split('/').slice(0, -1).join('/')
-
+wireupSass = ->
+  wireStream = require('wiredep').stream
   gulp.src "#{appConfig.app}/styles/*.scss"
-    .pipe wiredep
+    .pipe wireStream
       directory: "#{appConfig.app}/bower_components"
       devDependencies: true
     .pipe gulp.dest("#{appConfig.app}/styles")
 
+# inject all dependencies (bower, app)
+wireup = (dest, options={rails:false})->
+  wireStream = require('wiredep').stream
+  replace = require('gulp-replace')
+
+  destDir = dest.split('/').slice(0, -1).join('/')
+
   stream = gulp.src(dest)
-    .pipe($.inject(gulp.src('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/<%= dasherize(wireModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
-    .pipe($.inject(gulp.src('scripts/<%= dasherize(topLevelModuleName) %>/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/!(test-gen|test-gen-wire)/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-base', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/test-gen-wire/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-wire', addRootSlash: false}))
+    .pipe($.inject(gulp.src('scripts/test-gen/**/*.js', {read: false, cwd: '.tmp'}), {name: 'inject-app', addRootSlash: false}))
 
     stream = if options.rails
-      stream.pipe wiredep
+      stream.pipe wireStream
         directory: "#{appConfig.app}/bower_components"
       .pipe replace("../../../client/#{appConfig.app}/", '')
     else
-      stream.pipe wiredep
+      stream.pipe wireStream
         directory: "#{appConfig.app}/bower_components"
         devDependencies: true
 
     stream.pipe(gulp.dest(destDir))
 
+wiredep      = -> wireup "#{appConfig.app}/*.html"
+wiredepRails = -> wireup '../app/views/layouts/application.html.erb', rails: true
+
+gulp.task 'wireupJavascriptRails', wiredep
+gulp.task 'wireupJavascript', wiredep
+gulp.task 'wireupSass', wireupSass
+
 # Important: we must start wiredep only after coffee has been run, therefore,
 # we cannot just _depend_ on this like we do with coffee, otherwise coffee will
 # run parallel to wiredep
-gulp.task 'wiredep', ['coffee'], -> gulp.start 'wiredep-only'
+gulp.task 'wiredep', gulp.parallel('wireupJavascript', 'wireupSass')
+gulp.task 'rails-wiredep', gulp.parallel('wireupJavascriptRails', 'wireupSass')
 
-gulp.task 'wiredep-only', -> wireup "#{appConfig.app}/*.html"
+gulp.task 'serve', gulp.series gulp.parallel('connect', 'templates', 'styles', 'coffee', 'scripts'), 'wiredep', (cb)->
+  require('opn')('http://localhost:9000')
+  cb()
 
-gulp.task 'rails-wiredep', ['coffee', 'rails-wiredep-only']
-gulp.task 'rails-wiredep-only', -> wireup '../app/views/layouts/application.html.erb', rails: true
 
-gulp.task 'livereload', ->
+gulp.task 'livereload', (cb)->
   liveReloadables = [
     "{#{appConfig.app},.tmp}/**/*.html"        # refreshes the browser
     "{#{appConfig.app},.tmp}/styles/**/*.css"  # reloads the CSS within the current page
@@ -204,34 +232,32 @@ gulp.task 'livereload', ->
   server = $.livereload()
   gulp.watch liveReloadables
     .on 'change', (file) -> server.changed file.path
+  cb()
 
 watch = ->
   gulp.watch "#{appConfig.app}/styles/**/*.scss",    ['styles']
-  watcher = gulp.watch "#{appConfig.app}/scripts/**/*.coffee", (event) ->
-    if 'deleted' == event.type
-      tmpPath = event.path
-      .replace /\.coffee/, '.js'
-      .replace new RegExp("/#{appConfig.app}/scripts"), '/.tmp/scripts'
-      gulp.src(tmpPath, read: false).pipe($.clean())
-    coffeeFiles = event.path
-    gulp.start 'coffee'
   gulp.watch "#{appConfig.app}/scripts/**/*.js",     ['scripts']
   gulp.watch "#{appConfig.app}/images/**/*",         ['images']
   gulp.watch "#{appConfig.app}/partials/**/*.jade",  ['templates']
+  # TODO: since the tasks running this usually depend on coffee already, I
+  # think we end up running coffee twice. We should figure out a
+  # way to prevent that
+  coffee(watch: true)
 
 # gulp.watch 'these files', ['then do', 'these tasks', 'on each']
-gulp.task 'watch', ['connect', 'serve', 'livereload'], ->
-  gulp.watch 'bower.json',              ['wiredep-only']
-  gulp.watch '.tmp/scripts/**/*.js',    (event) ->
-    if ~['added', 'deleted'].indexOf event.type
-      gulp.start 'wiredep-only'
+gulp.task 'watch', gulp.series 'clean', gulp.parallel('serve', 'livereload'), (cb)->
+  gulp.watch 'bower.json', ['wiredep']
+  gulp.watch('.tmp/scripts/**').on 'change', (event)->
+    wiredep() if ~['added', 'deleted'].indexOf(event.type)
   watch()
+  cb()
 
-gulp.task 'dev', ['templates', 'styles', 'coffee', 'scripts'], (cb)->
-  gulp.watch 'bower.json',              ['wiredep-rails']
-  gulp.watch '.tmp/scripts/**/*.js',    (event) ->
-    if ~['added', 'deleted'].indexOf event.type
-      gulp.start 'rails-wiredep-only'
+gulp.task 'dev', gulp.series 'clean', gulp.parallel('templates', 'styles', 'scripts', wiredep), (cb)->
+  gulp.watch 'bower.json', ['rails-wiredep']
+  gulp.watch('.tmp/scripts/**').on 'change', (event)->
+  gulp.watch('.tmp/scripts/**').on 'change', (event)->
+    wiredepRails() if ~['added', 'deleted'].indexOf(event.type)
+
   watch()
   # TODO: do we want to start rails from here, and if so how?
   #require('child_process').exec 'cd .. && rails s', (err, stdout, stderr)->
@@ -239,3 +265,4 @@ gulp.task 'dev', ['templates', 'styles', 'coffee', 'scripts'], (cb)->
     #console.log stderr
     #cb(err)
   require('opn')('http://localhost:3000')
+  cb()
