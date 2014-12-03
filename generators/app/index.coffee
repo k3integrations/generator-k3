@@ -163,7 +163,6 @@ class AppGenerator extends K3Generator
       shareSpecPath = "#{@testPath}/#{@dasherize @sharedModuleName}"
 
       @template 'scripts/_jquery.parseParams.coffee'  , "#{wfPath}/jquery.parseParams.coffee"
-      @template 'scripts/_fakerFixes.coffee'          , "#{wfPath}/fakerFixes.coffee"
       @template 'scripts/_mockModels.coffee'          , "#{wfPath}/services/mockModels.coffee"
       @template 'scripts/_mocks.coffee'               , "#{wfPath}/services/mocks.coffee"
       @template 'scripts/_exitOffCanvas.coffee'       , "#{sharePath}/directives/exitOffCanvas.coffee"

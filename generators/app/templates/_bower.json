@@ -27,12 +27,12 @@
   "devDependencies": {
     "angular-mocks": "<%= ngVer %>",
     "angular-scenario": "<%= ngVer %>",
-    "Faker": "~1.1.0"
+    "Faker": "~2.0.0"
   },
   "overrides": {
     "Faker": {
       "main": [
-        "faker.js"
+        "build/build/faker.js"
       ]
     },
     "foundation": {

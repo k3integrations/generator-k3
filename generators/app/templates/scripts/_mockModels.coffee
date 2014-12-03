@@ -1,21 +1,22 @@
 angular.module('<%= wireModuleName %>').factory 'mockModels', ->
   # shortcuts / extensions
-  A   = faker.Address     # zipCode, zipCodeFormat, city, streetName, streetAddress, secondaryAddress, brState, ukCounty, ukCountry, usSate, latitude, longitude
-  C   = faker.Company     # companyName, companySuffix, catchPhrase, bs
-  D   = faker.Date        # past, future, between, recent
-  H   = faker.Helpers     # randomNumber, randomize, slugify, replaceSymbolWithNumber, shuffle, createCard, userCard
-  I   = faker.Internet    # email, userName, domainName, domainWord, ip, color
-  IMG = faker.Image       # avatar, imageUrl, abstractImage, animals, business, cats, city, food, nightLife, fashion, people, nature, sports, technics, transport
-  L   = faker.Lorem       # words, sentence, sentences, paragraph, paragraphs
-  N   = faker.Name        # firstName, firstNameFemale, firstNamemale, lastName, findName
-  P   = faker.PhoneNumber # phoneNumber, phoneNumberFormat
-  T   = faker.Tree        # clone, createTree
+  A   = faker.address   # zipCode, city, cityPrefix, citySuffix, streetName, streetAddress, streetSuffix, secondaryAddress, county, country, state, stateAbbr, latitude, longitude
+  C   = faker.company   # suffixes, companyName, companySuffix, catchPhrase, bs, catchPhraseAdjective, catchPhraseDescriptor, catchPhraseNoun, bsAdjective, bsBuzz, bsNoun
+  D   = faker.date      # past, future, between, recent
+  F   = faker.finance   # account, accountName, mask, amount, transactionType, currencyCode, currencyName, currencySymbol
+  Ha  = faker.hacker    # abbreviation,  adjective, noun, verb, ingverb, phrase
+  H   = faker.helpers   # randomNumber, randomize, slugify, replaceSymbolWithNumber, shuffle, mustache, createCard, contextualCard, userCard, createTransaction
+  IMG = faker.image     # image, avatar, imageUrl, abstract, animals, business, cats, city, food, nightlife, fashion, people, nature, sports, technics, transport
+  I   = faker.internet  # avatar, email, userName, domainName, domainSuffix, domainWord, ip, userAgent, color, password
+  L   = faker.lorem     # words, sentence, sentences, paragraph, paragraphs
+  N   = faker.name      # firstName, lastName, findName, prefix, suffix
+  P   = faker.phone     # phoneNumber, phoneNumberFormat, phoneFormats
+  R   = faker.random    # number, array_element, object_element
 
-
-  # Text Helpers
   sentences = (count) -> L.sentences(count).split("\n").join('. ') + '.'
   words     = (count) -> L.words(count).join ' '
 
+  # Text/String utilities
   titleCaseText   = (text)  -> text.replace /\w\S*/g, capitalizeStr
   capitalizeText  = (text)  -> text.replace /\w[^\.\?\!]*/g, capitalizeStr
   capitalizeStr   = (str)   -> str.charAt(0).toUpperCase() + str.substr(1)
