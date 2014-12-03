@@ -24,12 +24,13 @@ angular.module('<%= wireModuleName %>').factory 'mockModels', ->
 
   # Mock Model Factory Base
   class MockModelFactory
-    constructor: (@count) ->
+    constructor: (@count, @models) ->
       @lastId = 0
-      @generateCollection()
-
-    generateCollection: ->
-      @collection = ( @generate() for i in [1..@count] )
+      # lazy-load our collection so it can be easily used with other models
+      Object.defineProperty @, 'collection',
+        get: ->
+          @_collection or= ( @generate() for i in [1..@count] )
+          @_collection
 
     create: (attrs) ->
       newObj = _.merge {}, @generate(), attrs
@@ -74,18 +75,19 @@ angular.module('<%= wireModuleName %>').factory 'mockModels', ->
   #     name        : faker.Company.companyName()
   #     catchPhrase : faker.Company.catchPhrase()
   #     bs          : faker.Company.bs()
-  #   avatar  : faker.Image.avatar()
+  #   avatar  : faker.Internet.avatar()
   class UserFactory extends MockModelFactory
     generate: ->
       _.extend {},
         H.userCard(),
         id    : @generateId()
-        avatar: IMG.avatar()
+        avatar: I.avatar()
 
 
   # Our mock models; this is the returned object
   defaultCount  = 100
-  mockModels    =
-    users       : new UserFactory(defaultCount)
+  mockModels    = {}
+  _.merge mockModels,
+    users       : new UserFactory defaultCount, mockModels
 
   mockModels
