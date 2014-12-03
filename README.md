@@ -1,5 +1,13 @@
 # K3 Wireframing Generators for Yeoman
 
+## Installation
+
+To install this set of custom Yeoman generators, do the following:
+
+- clone the repository on your local system
+- navigate to the project’s root directory
+- run `npm link`
+
 ## Quick Start Guide
 
 To get you up and running in a hurry!
