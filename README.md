@@ -4,7 +4,7 @@
 
 To install this set of custom Yeoman generators, do the following:
 
-- clone the repository on your local system
+- clone the repository to your local system
 - navigate to the project’s root directory
 - run `npm link`
 
