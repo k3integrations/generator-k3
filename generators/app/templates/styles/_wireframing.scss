@@ -11,9 +11,7 @@ ng-include { display: inherit; }
     // We can set $full-width:true to remove side padding extend width. Default:false
     $full-width: false,
     // We can set $disabled:true to create a disabled transparent button. Default:false
-    $disabled: false,
-    // $is-input - <input>s and <button>s take on strange padding. We added this to help fix that. Default:false
-    $is-input: false
+    $disabled: false
   );
   color: hsl(0,0%,0%);
   border: 1px solid;
