@@ -252,9 +252,9 @@ wireup = (dest, options={rails:false})->
   inject = (files, name, addRootSlash = false)->
     $.inject(files,  {name: name,  addRootSlash: addRootSlash})
 
-  wireFiles  = filesFor('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.coffee')
-  appFiles   = filesFor('scripts/<%= dasherize(wireModuleName) %>/**/*.coffee')
-  baseFiles  = filesFor('scripts/<%= dasherize(topLevelModuleName) %>/**/*.coffee')
+  wireFiles = filesFor('scripts/<%= dasherize(wireModuleName) %>/**/*.{js,coffee}')
+  appFiles  = filesFor('scripts/<%= dasherize(topLevelModuleName) %>/**/*.{js,coffee}')
+  baseFiles = filesFor('scripts/!(<%= dasherize(topLevelModuleName) %>|<%= dasherize(wireModuleName) %>)/**/*.{js,coffee}')
 
   stream = gulp.src(dest)
     .pipe inject(wireFiles,  'inject-wire')
