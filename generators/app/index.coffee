@@ -117,6 +117,13 @@ class AppGenerator extends K3Generator
       # load our config settings as local properties
       @_.extend @, configs
 
+    setupRails: ->
+      layoutPath = "../app/views/layouts/application.html.erb"
+      if @fs.exists layoutPath
+        file = @readFileAsString layoutPath
+        file.replace("NG_APP", @topLevelModuleName)
+        @writeFileFromString file, layoutPath
+
     createTopLevelModule: ->
       @composeWith "k3:module",
         arguments: [@topLevelModuleName]
