@@ -120,6 +120,7 @@ class AppGenerator extends K3Generator
     setupRails: ->
       layoutPath = "../app/views/layouts/application.html.erb"
       if @fs.exists layoutPath
+        console.log "Replacing NG_APP in applicationn.html.erb"
         file = @readFileAsString layoutPath
         file.replace("NG_APP", @topLevelModuleName)
         @writeFileFromString file, layoutPath
