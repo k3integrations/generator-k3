@@ -2,7 +2,10 @@
 
 ## Prerequisites
 
-- node & npm
+- rails 4.2: `gem install rails`
+- node and npm: `brew install node`
+- gulp: `npm install -g gulp` (latest)
+- bower: `npm install -g bower`
 - yeoman: `npm install -g yo`
 
 
@@ -19,14 +22,11 @@ To install this set of custom Yeoman generators, do the following:
 
 To get you up and running in a hurry!
 
-The main idea of our work flow is to create the client (wireframing) app inside of a Rails app.
-
-    $ rails new [RailsAppName] --skip-bundle
-    $ cd [RailsAppName] && mkdir client && cd client
-    $ yo k3 [ClientAppName]
+    $ yo k3:rails [args to `rails new`]
 
 … follow the on-screen instructions & wait for dependencies to download and install …
 
+    $ cd [AppName]/client
     $ gulp watch
     $ yo k3:directive <name> # etc.
 
@@ -124,3 +124,8 @@ Creates an AngularJS service and hooks it into the app. Also creates a spec file
 Creates an AngularJS value service and hooks it into the app. Also creates a spec file for testing.
 
 ### k3:view _(coming soon)_
+
+
+## TODO
+
+- update copyright at bottom of main layout
