@@ -19,7 +19,11 @@ To install this set of custom Yeoman generators, do the following:
 
 To get you up and running in a hurry!
 
-    $ yo k3 [appName]
+The main idea of our work flow is to create the client (wireframing) app inside of a Rails app.
+
+    $ rails new [RailsAppName] --skip-bundle
+    $ cd [RailsAppName] && mkdir client && cd client
+    $ yo k3 [ClientAppName]
 
 … follow the on-screen instructions & wait for dependencies to download and install …
 
