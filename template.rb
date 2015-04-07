@@ -76,6 +76,7 @@ file layout_path, <<-CODE
     <%= stylesheet_link_tag "main.css" %>
   <% else %>
     <!-- build:css assets/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   <% end %>
 
