@@ -1,5 +1,11 @@
 # K3 Wireframing Generators for Yeoman
 
+## Prerequisites
+
+- node & npm
+- yeoman: `npm install -g yo`
+
+
 ## Installation
 
 To install this set of custom Yeoman generators, do the following:
@@ -7,6 +13,7 @@ To install this set of custom Yeoman generators, do the following:
 - clone the repository to your local system
 - navigate to the project’s root directory
 - run `npm link`
+
 
 ## Quick Start Guide
 
@@ -19,9 +26,10 @@ To get you up and running in a hurry!
     $ gulp watch
     $ yo k3:directive <name> # etc.
 
+
 ## Wireframe-first Approach to Development
 
-### Wireframing
+### Wireframing Conventions
 
 - Scope variable prefixes (`wfMyVar`)
   - makes it easy to spot wireframe only variables on integration
@@ -39,6 +47,7 @@ To get you up and running in a hurry!
 - **Rule of thumb:**
   - Any script file not in the `Wire` module should be designed in such a way as to work with Rails eventually _without_ modification. Usually the only place this is not possible is in the views, but those should only have attributes of equivalent functionality to the a Rails counterpart (e.g. `ng-repeat` becomes a `.each do` loop).
   - A view that you know is going to be served by Rails later should not have dependencies on any routing or controllers, unless the controller is expected to be in the Rails app as well. Directives are the preferred interface between Rails and JavaScript.
+
 
 ## Generator API
 
