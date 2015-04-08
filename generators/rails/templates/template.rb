@@ -1,4 +1,6 @@
-lib 'serve_static.rb', <<-CODE
+
+# Add our custom static file serving Middleware for serving assets from client
+lib 'serve_static.rb', <<-RUBY
 # Serve static assets with fallthrough.
 # This patch prevents the index.html from being served
 require 'action_dispatch/middleware/static'
@@ -18,8 +20,9 @@ class ServeStatic < ActionDispatch::Static
     @file_handler = MyFileHandler.new(path, cache_control)
   end
 end
-CODE
+RUBY
 
+# Insert our custom middleware in production
 environment <<CONFIG, env: 'production'
   ####
   # Allows production env testing on dev machines by setting the
@@ -35,6 +38,7 @@ environment <<CONFIG, env: 'production'
   end
 CONFIG
 
+# Insert our custom middleware in development
 environment <<CONFIG, env: 'development'
   require 'serve_static'
 
@@ -43,11 +47,15 @@ environment <<CONFIG, env: 'development'
   config.middleware.insert_after Rack::Lock, ServeStatic, './client/.tmp'
 CONFIG
 
+
+# Update the default application layout
 layout_path = 'app/views/layouts/application.html.erb'
 
+# Remove the existing layout so we don't have a prompt requiring us to allow the overwrite
 run "rm #{layout_path}"
 
-file layout_path, <<-CODE
+# Write out an entirely new application.html.erb layout with a hook for the yeoman generator to inject the AngularJS app name.
+file layout_path, <<-HTML
 <!doctype html>
 
 <html class="no-js" lang="en" ng-app="{{NG_APP}}">
@@ -125,7 +133,7 @@ file layout_path, <<-CODE
 </body>
 
 </html>
-CODE
+HTML
 
 
 # Add the jade2haml script so we can easily convert wireframe jade files to Rails app haml files
@@ -176,6 +184,7 @@ STDOUT.puts 'success'
 RUBY
 
 
+# create our client directory and run the base yo k3 generator
 after_bundle do
   run "mkdir client"
   inside "client" do
