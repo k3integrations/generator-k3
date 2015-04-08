@@ -125,8 +125,3 @@ Creates an AngularJS service and hooks it into the app. Also creates a spec file
 Creates an AngularJS value service and hooks it into the app. Also creates a spec file for testing.
 
 ### k3:view _(coming soon)_
-
-
-## TODO
-
-- update copyright at bottom of main layout

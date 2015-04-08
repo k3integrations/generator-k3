@@ -195,7 +195,8 @@ class AppGenerator extends K3Generator
       @template 'styles/_login.scss'          , "#{stylePath}/_login.scss"
 
     html: ->
-      partialsPath = "#{@appPath}/partials"
+      @currentYear  = (new Date()).getFullYear()
+      partialsPath  = "#{@appPath}/partials"
       @template 'html/index.html'         , "#{@appPath}/index.html"
       @template 'html/_home.jade'         , "#{partialsPath}/home.jade"
       @template 'html/_header.jade'       , "#{partialsPath}/header.jade"
