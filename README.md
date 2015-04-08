@@ -130,5 +130,4 @@ Creates an AngularJS value service and hooks it into the app. Also creates a spe
 ## TODO
 
 - add jade2haml script
-- fix NG_APP injector
 - update copyright at bottom of main layout
