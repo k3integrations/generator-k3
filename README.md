@@ -4,6 +4,7 @@
 
 - rails 4.2: `gem install rails`
 - node and npm: `brew install node`
+- karma: `npm install -g karma-cli`
 - gulp: `npm install -g gulp` (latest)
 - bower: `npm install -g bower`
 - yeoman: `npm install -g yo`
