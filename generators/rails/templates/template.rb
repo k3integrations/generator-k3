@@ -127,6 +127,55 @@ file layout_path, <<-CODE
 </html>
 CODE
 
+
+# Add the jade2haml script so we can easily convert wireframe jade files to Rails app haml files
+file "script/jade2haml", <<-RUBY
+#!/usr/bin/env ruby
+
+unless ARGV[0] && ARGV[1]
+  STDOUT.puts <<-EOF
+jade2haml is essentially a shortcut for doing `jade < INPUT | html2haml --stdin --html-attributes OUTPUT
+
+Usage:
+  jade2haml INPUT OUTPUT
+EOF
+  exit 0
+end
+
+# TODO: maybe just use the system jade command-line tool by default and add an
+#   option for setting --jade-path or something
+# IF YOU FIX THIS, please add it back into the generator-k3 template.rb file
+jade_bin = File.expand_path('./client/node_modules/jade/bin/jade.js')
+
+unless File.exist?(jade_bin)
+  STDOUT.puts 'Cannot find jade CLI.', "  path: \#{jade_bin}"
+  exit 1
+end
+
+input_file  = File.expand_path ARGV[0]
+output_file = File.expand_path ARGV[1]
+
+unless File.exist?(input_file)
+  STDOUT.puts "Could not find file: \#{input_file}"
+  exit 0
+end
+
+# TODO: parse options and detect a --debug or --verbose option to use this output
+# IF YOU FIX THIS, please add it back into the generator-k3 template.rb file
+# STDOUT.puts <<-EOF
+# jade path:    \#{jade_bin}
+# input file:   \#{input_file}
+# output file:  \#{output_file}
+# EOF
+
+# STDOUT.puts "jade < \#{ARGV[0]} | html2haml --stdin --html-attributes \#{ARGV[1]}"
+
+`"\#{jade_bin}" < "\#{input_file}" | html2haml -s --html-attributes "\#{output_file}"`
+
+STDOUT.puts 'success'
+RUBY
+
+
 after_bundle do
   run "mkdir client"
   inside "client" do
