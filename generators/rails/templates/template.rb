@@ -50,7 +50,7 @@ run "rm #{layout_path}"
 file layout_path, <<-CODE
 <!doctype html>
 
-<html class="no-js" lang="en" ng-app="NG_APP">
+<html class="no-js" lang="en" ng-app="{{NG_APP}}">
 
 <head>
   <meta charset="utf-8" />
